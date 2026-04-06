@@ -89,13 +89,10 @@
         cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
         border: none;
       }
-      .btn-primary {
-        background: var(--acid); color: var(--black);
-      }
+      .btn-primary { background: var(--acid); color: var(--black); }
       .btn-primary:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 rgba(0,255,209,0.3); }
-      .btn-ghost {
-        background: transparent; color: var(--white); border: 1px solid var(--mid);
-      }
+      .btn-primary:disabled { background: var(--mid); color: var(--dim); cursor: not-allowed; transform: none; box-shadow: none; }
+      .btn-ghost { background: transparent; color: var(--white); border: 1px solid var(--mid); }
       .btn-ghost:hover { border-color: var(--acid); color: var(--acid); }
       .btn-danger { background: rgba(255,58,58,0.1); color: var(--red); border: 1px solid rgba(255,58,58,0.3); }
       .btn-danger:hover { background: rgba(255,58,58,0.2); }
@@ -111,383 +108,321 @@
       .stat-card:hover { border-color: rgba(0,255,209,0.3); }
       .stat-card .stat-label {
         font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
-        color: var(--dim); margin-bottom: 12px;
+        color: var(--dim); margin-bottom: 8px;
       }
-      .stat-card .stat-value {
-        font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem;
-        line-height: 1; letter-spacing: -0.02em;
-      }
-      .stat-card .stat-sub {
-        font-size: 0.65rem; color: var(--dim); margin-top: 8px;
-      }
-      .stat-value.acid { color: var(--acid); text-shadow: 0 0 20px rgba(0,255,209,0.3); }
+      .stat-card .stat-value { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--white); }
+      .stat-value.acid { color: var(--acid); }
       .stat-value.amber { color: var(--amber); }
       .stat-value.red { color: var(--red); }
-      .stat-value.white { color: var(--white); }
-
-      /* ── MAIN LAYOUT ── */
-      .main-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
-      @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
 
       /* ── PANELS ── */
       .panel {
-        border: 1px solid var(--mid); background: var(--grey); overflow: hidden;
+        border: 1px solid var(--mid); background: var(--grey); margin-bottom: 20px;
       }
       .panel-header {
         display: flex; justify-content: space-between; align-items: center;
         padding: 16px 24px; border-bottom: 1px solid var(--mid);
-        background: var(--black);
       }
       .panel-title {
-        font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700;
-        display: flex; align-items: center; gap: 10px;
+        font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.72rem;
+        text-transform: uppercase; letter-spacing: 0.15em; color: var(--white);
       }
       .panel-badge {
-        font-size: 0.5rem; letter-spacing: 0.15em; padding: 3px 10px;
-        text-transform: uppercase;
+        font-size: 0.5rem; padding: 3px 10px; letter-spacing: 0.15em; text-transform: uppercase;
+        border: 1px solid;
       }
-      .panel-badge.live { background: rgba(0,255,209,0.1); color: var(--acid); border: 1px solid rgba(0,255,209,0.2); }
-      .panel-badge.beta { background: rgba(255,176,0,0.1); color: var(--amber); border: 1px solid rgba(255,176,0,0.2); }
+      .panel-badge.live { color: var(--acid); border-color: var(--acid); background: var(--glow); }
+      .panel-badge.beta { color: var(--amber); border-color: var(--amber); background: rgba(255,176,0,0.08); }
+      .panel-badge.api { color: #818cf8; border-color: #818cf8; background: rgba(129,140,248,0.08); }
       .panel-body { padding: 24px; }
 
       /* ── CODE INPUT ── */
-      .code-input {
-        width: 100%; min-height: 220px; background: var(--black);
-        border: 1px solid var(--mid); padding: 20px;
-        color: var(--white); font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
-        line-height: 1.7; resize: vertical; cursor: text;
+      textarea {
+        width: 100%; min-height: 200px; background: var(--black); border: 1px solid var(--mid);
+        color: var(--acid); font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+        padding: 20px; resize: vertical; line-height: 1.6; outline: none;
       }
-      .code-input:focus { outline: none; border-color: var(--acid); box-shadow: 0 0 0 1px rgba(0,255,209,0.2); }
-      .code-input::placeholder { color: var(--dim); }
+      textarea:focus { border-color: var(--acid); box-shadow: 0 0 0 1px rgba(0,255,209,0.2); }
 
-      /* ── SCAN OPTIONS ── */
-      .scan-options {
-        display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap;
+      .code-controls {
+        display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+        padding-top: 16px; border-top: 1px solid var(--mid); margin-top: 16px;
       }
-      .scan-opt {
-        display: flex; align-items: center; gap: 8px; padding: 10px 16px;
-        background: var(--black); border: 1px solid var(--mid); cursor: pointer;
-        transition: all 0.2s; font-size: 0.7rem;
-      }
-      .scan-opt:hover { border-color: rgba(0,255,209,0.3); }
-      .scan-opt input[type="checkbox"] { accent-color: var(--acid); width: 14px; height: 14px; cursor: pointer; }
-      .scan-opt label { cursor: pointer; color: var(--dim); letter-spacing: 0.05em; }
-      .scan-opt input:checked + label { color: var(--white); }
+      .code-meta { display: flex; gap: 20px; flex: 1; align-items: center; }
+      .code-meta span { font-size: 0.6rem; color: var(--dim); letter-spacing: 0.1em; }
+      .check-option { display: flex; align-items: center; gap: 6px; }
+      .check-option input { accent-color: var(--acid); }
+      .check-option label { font-size: 0.6rem; letter-spacing: 0.1em; color: var(--dim); text-transform: uppercase; }
 
-      .lang-select {
-        width: 100%; padding: 10px 16px; background: var(--black);
-        border: 1px solid var(--mid); color: var(--white);
-        font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-        margin-bottom: 16px; cursor: pointer;
+      /* ── API CONFIG ── */
+      .api-config {
+        display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+        padding: 16px 24px; border-bottom: 1px solid var(--mid);
+        background: rgba(0,255,209,0.02);
       }
-      .lang-select:focus { outline: none; border-color: var(--acid); }
+      .api-config label {
+        font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+        color: var(--dim); white-space: nowrap;
+      }
+      .api-config input[type="password"], .api-config input[type="text"] {
+        background: var(--black); border: 1px solid var(--mid); color: var(--acid);
+        font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;
+        padding: 8px 14px; flex: 1; min-width: 200px; outline: none;
+      }
+      .api-config input:focus { border-color: var(--acid); }
+      .api-status {
+        font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase;
+        display: flex; align-items: center; gap: 6px;
+      }
+      .api-status .dot { width: 6px; height: 6px; border-radius: 50%; }
+      .api-status .dot.connected { background: var(--acid); box-shadow: 0 0 6px var(--acid); }
+      .api-status .dot.disconnected { background: var(--red); }
+      .mode-toggle {
+        display: flex; gap: 0; border: 1px solid var(--mid);
+      }
+      .mode-toggle button {
+        padding: 6px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem;
+        letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer;
+        background: transparent; color: var(--dim); transition: all 0.2s;
+      }
+      .mode-toggle button.active { background: var(--acid); color: var(--black); }
 
-      /* ── RESULTS ── */
-      .results-empty {
-        text-align: center; padding: 60px 20px; color: var(--dim);
-      }
-      .results-empty .icon-large {
-        font-size: 2.5rem; margin-bottom: 16px; opacity: 0.3;
-      }
-      .results-empty p { font-size: 0.72rem; letter-spacing: 0.05em; }
-
-      /* SQI Score Ring */
-      .sqi-display { display: none; text-align: center; padding: 20px; }
+      /* ── SQI DISPLAY ── */
+      .sqi-section { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+      .sqi-left { text-align: center; min-width: 200px; }
       .sqi-ring {
-        width: 160px; height: 160px; border-radius: 50%; margin: 0 auto 20px;
-        display: flex; align-items: center; justify-content: center;
-        position: relative;
-        background: conic-gradient(var(--acid) 0deg, var(--acid) calc(var(--sqi) * 3.6deg), var(--mid) calc(var(--sqi) * 3.6deg));
+        width: 180px; height: 180px; border-radius: 50%; position: relative;
+        display: flex; align-items: center; justify-content: center; flex-direction: column;
+        margin: 0 auto 16px;
+        background: conic-gradient(var(--acid) calc(var(--sqi) * 3.6deg), var(--mid) 0);
       }
       .sqi-ring::before {
-        content: ''; width: 130px; height: 130px; background: var(--grey);
-        border-radius: 50%; position: absolute;
+        content: ''; position: absolute; width: 150px; height: 150px; border-radius: 50%;
+        background: var(--grey);
       }
-      .sqi-ring.amber-ring {
-        background: conic-gradient(var(--amber) 0deg, var(--amber) calc(var(--sqi) * 3.6deg), var(--mid) calc(var(--sqi) * 3.6deg));
-      }
-      .sqi-ring.red-ring {
-        background: conic-gradient(var(--red) 0deg, var(--red) calc(var(--sqi) * 3.6deg), var(--mid) calc(var(--sqi) * 3.6deg));
-      }
+      .sqi-ring.verified-glow { box-shadow: 0 0 30px rgba(0,255,209,0.3); }
+      .sqi-ring.amber-ring { background: conic-gradient(var(--amber) calc(var(--sqi) * 3.6deg), var(--mid) 0); }
+      .sqi-ring.red-ring { background: conic-gradient(var(--red) calc(var(--sqi) * 3.6deg), var(--mid) 0); }
       .sqi-value {
         position: relative; z-index: 1;
-        font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.5rem;
-        letter-spacing: -0.02em;
+        font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800;
       }
-      .sqi-label {
-        font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
-        color: var(--dim); margin-bottom: 4px;
-      }
+      .sqi-label { position: relative; z-index: 1; font-size: 0.6rem; color: var(--dim); letter-spacing: 0.2em; text-transform: uppercase; }
       .sqi-verdict {
-        font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
-        margin-top: 8px; letter-spacing: 0.05em;
+        font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+        letter-spacing: 0.15em; text-transform: uppercase; margin-top: 8px;
       }
-      .sqi-verdict.verified { color: var(--acid); text-shadow: 0 0 20px rgba(0,255,209,0.4); }
+      .sqi-verdict.verified { color: var(--acid); }
       .sqi-verdict.diagnostic { color: var(--amber); }
       .sqi-verdict.critical { color: var(--red); }
 
-      /* Layer Status */
-      .layer-status { margin-top: 24px; text-align: left; }
+      .sqi-right { flex: 1; min-width: 300px; }
       .layer-row {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 12px 16px; border: 1px solid var(--mid);
-        background: var(--black); margin-bottom: 6px;
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 12px 0; border-bottom: 1px solid var(--mid);
       }
-      .layer-row .layer-name {
-        font-size: 0.7rem; letter-spacing: 0.08em; color: var(--white);
-        display: flex; align-items: center; gap: 10px;
-      }
-      .layer-row .layer-num {
-        font-size: 0.55rem; color: var(--acid); letter-spacing: 0.15em;
-      }
-      .layer-row .layer-result {
-        font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
-        display: flex; align-items: center; gap: 6px;
-      }
+      .layer-name { font-size: 0.68rem; letter-spacing: 0.08em; }
+      .layer-num { color: var(--acid); font-weight: 500; margin-right: 8px; }
+      .layer-result { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
       .layer-result.pass { color: var(--acid); }
-      .layer-result.fail { color: var(--amber); }
-      .layer-result.error { color: var(--red); }
-      .status-dot {
-        width: 6px; height: 6px; border-radius: 50%;
-      }
-      .status-dot.pass { background: var(--acid); box-shadow: 0 0 8px rgba(0,255,209,0.5); }
-      .status-dot.fail { background: var(--amber); }
-      .status-dot.error { background: var(--red); }
+      .layer-result.fail { color: var(--red); }
+      .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+      .status-dot.pass { background: var(--acid); box-shadow: 0 0 6px var(--acid); }
+      .status-dot.fail { background: var(--red); box-shadow: 0 0 6px var(--red); }
 
-      /* Issues List */
-      .issues-list { margin-top: 20px; text-align: left; }
+      /* ── ISSUES ── */
       .issue-item {
-        display: flex; align-items: flex-start; gap: 14px;
-        padding: 14px 16px; background: var(--black); margin-bottom: 6px;
-        border-left: 3px solid var(--mid);
+        display: flex; gap: 16px; align-items: flex-start;
+        padding: 14px 0; border-bottom: 1px solid var(--mid);
       }
-      .issue-item.critical { border-left-color: var(--red); }
-      .issue-item.high { border-left-color: var(--amber); }
-      .issue-item.medium { border-left-color: #FF8C00; }
-      .issue-item.low { border-left-color: var(--acid); }
       .issue-badge {
-        padding: 3px 8px; font-size: 0.5rem; font-weight: 500;
-        letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0;
+        font-size: 0.5rem; padding: 3px 10px; letter-spacing: 0.12em; text-transform: uppercase;
+        white-space: nowrap; border: 1px solid;
       }
-      .issue-badge.critical { background: rgba(255,58,58,0.15); color: var(--red); }
-      .issue-badge.high { background: rgba(255,176,0,0.15); color: var(--amber); }
-      .issue-badge.medium { background: rgba(255,140,0,0.15); color: #FF8C00; }
-      .issue-badge.low { background: rgba(0,255,209,0.1); color: var(--acid); }
-      .issue-info h4 { font-size: 0.75rem; font-weight: 500; margin-bottom: 3px; }
-      .issue-info p { font-size: 0.65rem; color: var(--dim); line-height: 1.5; }
-      .issue-cwe { font-size: 0.55rem; color: var(--dim); margin-top: 4px; letter-spacing: 0.05em; }
+      .issue-badge.critical { color: var(--red); border-color: var(--red); background: rgba(255,58,58,0.08); }
+      .issue-badge.high { color: #FF8C3A; border-color: #FF8C3A; background: rgba(255,140,58,0.08); }
+      .issue-badge.medium { color: var(--amber); border-color: var(--amber); background: rgba(255,176,0,0.08); }
+      .issue-badge.low { color: var(--dim); border-color: var(--mid); }
+      .issue-info h4 { font-size: 0.68rem; font-weight: 500; margin-bottom: 4px; }
+      .issue-info p { font-size: 0.6rem; color: var(--dim); line-height: 1.5; }
+      .issue-cwe { font-size: 0.5rem; color: var(--dim); margin-top: 4px; letter-spacing: 0.1em; }
+
+      /* ── HARDENED CODE ── */
+      .hardened-section { margin-top: 16px; }
+      .hardened-section h4 {
+        font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.65rem;
+        text-transform: uppercase; letter-spacing: 0.15em; color: var(--acid);
+        margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+      }
+      .hardened-code {
+        background: var(--black); border: 1px solid rgba(0,255,209,0.15);
+        padding: 20px; font-size: 0.72rem; line-height: 1.6; color: var(--acid);
+        max-height: 400px; overflow-y: auto; white-space: pre-wrap; word-break: break-all;
+      }
 
       /* ── LOADING ── */
-      .loading { display: none; text-align: center; padding: 50px 20px; }
-      .scan-anim {
-        width: 56px; height: 56px; border: 2px solid var(--mid);
-        border-top-color: var(--acid); border-radius: 50%;
-        animation: spin 0.8s linear infinite; margin: 0 auto 20px;
+      #loading { display: none; text-align: center; padding: 60px 20px; }
+      .spinner {
+        width: 48px; height: 48px; border: 2px solid var(--mid); border-top: 2px solid var(--acid);
+        border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px;
       }
-      @keyframes spin { to { transform: rotate(360deg); } }
-      .loading p { font-size: 0.72rem; color: var(--dim); letter-spacing: 0.05em; }
-      .loading .scan-phase {
-        font-size: 0.6rem; color: var(--acid); margin-top: 8px;
-        letter-spacing: 0.15em; text-transform: uppercase;
-      }
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+      .scan-phase { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--acid); }
+      .scan-sub { font-size: 0.55rem; color: var(--dim); margin-top: 8px; letter-spacing: 0.1em; }
 
-      /* ── ACTIVITY LOG ── */
-      .activity-item {
-        display: flex; align-items: center; gap: 14px;
-        padding: 14px 0; border-bottom: 1px solid rgba(42,42,48,0.5);
-      }
-      .activity-icon {
-        width: 32px; height: 32px; border: 1px solid var(--mid);
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.75rem; flex-shrink: 0; background: var(--black);
-      }
-      .activity-content { flex: 1; }
-      .activity-content h4 { font-size: 0.72rem; font-weight: 500; margin-bottom: 2px; }
-      .activity-content p { font-size: 0.6rem; color: var(--dim); }
-      .activity-time { font-size: 0.58rem; color: var(--dim); letter-spacing: 0.05em; }
+      /* ── ACTIVITY ── */
+      .activity-item { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--mid); }
+      .activity-icon { font-size: 1rem; width: 30px; text-align: center; }
+      .activity-content h4 { font-size: 0.65rem; font-weight: 500; margin-bottom: 2px; }
+      .activity-content p { font-size: 0.55rem; color: var(--dim); }
+      .activity-time { font-size: 0.5rem; color: var(--dim); margin-left: auto; white-space: nowrap; }
 
       /* ── FOOTER ── */
       .footer {
-        text-align: center; padding: 40px 20px; margin-top: 32px;
-        border-top: 1px solid var(--mid); font-size: 0.65rem; color: var(--dim);
-        letter-spacing: 0.08em;
+        text-align: center; padding: 40px 20px 30px; font-size: 0.55rem;
+        color: var(--dim); letter-spacing: 0.1em;
       }
       .footer a { color: var(--acid); text-decoration: none; }
-      .footer a:hover { text-decoration: underline; }
-      .footer .footer-brand {
-        font-family: 'Syne', sans-serif; font-weight: 800;
-        color: var(--white); letter-spacing: 0.12em;
-      }
+      .footer-brand { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 0.2em; }
 
-      /* ── PULSE animation for verified ── */
-      @keyframes pulse-glow {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,209,0); }
-        50% { box-shadow: 0 0 30px 8px rgba(0,255,209,0.15); }
-      }
-      .verified-glow { animation: pulse-glow 2s ease-in-out infinite; }
+      #sqiDisplay { display: none; }
+      #resultsEmpty { text-align: center; padding: 60px 20px; }
+      #resultsEmpty p { font-size: 0.65rem; color: var(--dim); letter-spacing: 0.1em; }
 
-      /* ── RESPONSIVE ── */
-      @media (max-width: 768px) {
-        .container { padding: 20px 16px; }
-        nav { padding: 12px 16px; }
-        .stats-grid { grid-template-columns: 1fr 1fr; }
-        .main-grid { grid-template-columns: 1fr; }
+      /* Error display */
+      .error-box {
+        background: rgba(255,58,58,0.06); border: 1px solid rgba(255,58,58,0.25);
+        padding: 16px 20px; margin-top: 12px; display: none;
       }
+      .error-box p { font-size: 0.65rem; color: var(--red); line-height: 1.5; }
+      .error-box .error-title { font-weight: 500; margin-bottom: 4px; }
+      .error-box .error-detail { color: var(--dim); font-size: 0.58rem; }
     </style>
 </head>
 <body>
-
 <div class="grid-bg"></div>
 <div class="hero-glow"></div>
 
-<!-- ── NAV ── -->
-<nav>
-  <div style="display:flex; align-items:center;">
-    <a href="#" class="logo">
-      <div class="logo-mark">M10</div>
-      <span class="logo-text">SAIKOU<span>.TECH</span></span>
+<div class="container" style="padding-top: 90px;">
+  <!-- NAV -->
+  <nav>
+    <a class="logo" href="https://saikou.tech" target="_blank">
+      <div class="logo-mark">最高</div>
+      <div class="logo-text">SAIKOU<span>.TECH</span></div>
+      <span class="nav-tag">Model10</span>
     </a>
-    <span class="nav-tag">Model10 Dashboard</span>
-  </div>
-  <div class="nav-actions">
-    <button class="btn btn-ghost" onclick="showHistory()">History</button>
-    <button class="btn btn-ghost" onclick="exportReport()">Export</button>
-    <button class="btn btn-primary" onclick="document.getElementById('codeInput').focus()">New Scan</button>
-  </div>
-</nav>
+    <div class="nav-actions">
+      <span id="verdictBadge" class="panel-badge beta" style="display:none;"></span>
+      <button class="btn btn-ghost" onclick="showHistory()">◷ History</button>
+      <button class="btn btn-ghost" onclick="exportReport()">↓ Export</button>
+    </div>
+  </nav>
 
-<div class="container" style="margin-top: 80px;">
-
-  <!-- ── STAT CARDS ── -->
+  <!-- STATS -->
   <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-label">// SQI Score</div>
-      <div class="stat-value acid" id="sqi-stat">—</div>
-      <div class="stat-sub">Saikou Quality Index</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">// Layer Status</div>
-      <div class="stat-value white" id="layer-stat">—</div>
-      <div class="stat-sub">3-Layer Funnel</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">// Total Scans</div>
-      <div class="stat-value white" id="scan-count">0</div>
-      <div class="stat-sub">Lifetime analyses</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">// Issues Detected</div>
-      <div class="stat-value amber" id="issues-count">0</div>
-      <div class="stat-sub">Vulnerabilities found</div>
-    </div>
+    <div class="stat-card"><div class="stat-label">Total Scans</div><div class="stat-value" id="scan-count">0</div></div>
+    <div class="stat-card"><div class="stat-label">Issues Found</div><div class="stat-value" id="issues-count">0</div></div>
+    <div class="stat-card"><div class="stat-label">Current SQI</div><div class="stat-value acid" id="sqi-stat">—</div></div>
+    <div class="stat-card"><div class="stat-label">3-Layer Status</div><div class="stat-value acid" id="layer-stat">—</div></div>
   </div>
 
-  <!-- ── MAIN GRID ── -->
-  <div class="main-grid">
-
-    <!-- SCANNER PANEL -->
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">
-          Code Input
-          <span class="panel-badge live">M10 Engine</span>
-        </span>
-        <span id="langDetected" style="font-size:0.6rem; color:var(--dim); letter-spacing:0.1em;"></span>
-      </div>
-      <div class="panel-body">
-        <textarea class="code-input" id="codeInput" placeholder="// Paste code here for Model10 analysis
-//
-// Example:
-// def get_user(user_id):
-//     query = f&quot;SELECT * FROM users WHERE id = {user_id}&quot;
-//     return db.execute(query)
-//
-// The M10 3-Layer Funnel will scan for:
-//   Layer 1: AST Validation (syntax, structure)
-//   Layer 2: ASC Engine (adversarial self-critique)
-//   Layer 3: Zero-Guessing Gateway (verification)"></textarea>
-
-        <div class="scan-options">
-          <div class="scan-opt">
-            <input type="checkbox" id="optSecurity" checked>
-            <label for="optSecurity">Security Scan</label>
-          </div>
-          <div class="scan-opt">
-            <input type="checkbox" id="optQuality" checked>
-            <label for="optQuality">Quality Audit</label>
-          </div>
-          <div class="scan-opt">
-            <input type="checkbox" id="optASC" checked>
-            <label for="optASC">ASC Engine</label>
-          </div>
-          <div class="scan-opt">
-            <input type="checkbox" id="optAutoFix">
-            <label for="optAutoFix">Auto-Fix</label>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <!-- LEFT: INPUT -->
+    <div>
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Code Input</span>
+          <div class="mode-toggle">
+            <button id="modeAgent" class="active" onclick="setMode('agent')">⚡ Agent API</button>
+            <button id="modeLocal" onclick="setMode('local')">◉ Local</button>
           </div>
         </div>
 
-        <select class="lang-select" id="scanDepth">
-          <option value="quick">Quick Scan — 1 Iteration</option>
-          <option value="standard" selected>Standard — 2 Iterations</option>
-          <option value="deep">Deep Scan — Full 3-Layer Funnel</option>
-        </select>
+        <!-- API Config (shown in agent mode) -->
+        <div class="api-config" id="apiConfigBar">
+          <label>API Key</label>
+          <input type="password" id="apiKeyInput" placeholder="Enter your AutoGPT API key..." value="">
+          <div class="api-status" id="apiStatus">
+            <span class="dot disconnected" id="apiDot"></span>
+            <span id="apiStatusText">NOT CONNECTED</span>
+          </div>
+        </div>
 
-        <button class="btn btn-primary" style="width:100%; justify-content:center; padding:14px;" onclick="startScan()">
-          Initiate Model10 Scan →
-        </button>
+        <div class="panel-body">
+          <textarea id="codeInput" placeholder="Paste your code here for Model10 analysis...&#10;&#10;The 3-Layer Diagnostic Funnel will:&#10;  L1 — AST Validator: Deep syntax & security scan&#10;  L2 — ASC Engine: Adversarial self-critique&#10;  L3 — Zero-Guessing Gateway: Deterministic 10/10 verification"></textarea>
+          <div class="code-controls">
+            <div class="code-meta">
+              <span id="langDetected"></span>
+              <div class="check-option"><input type="checkbox" id="optSecurity" checked><label for="optSecurity">Security</label></div>
+              <div class="check-option"><input type="checkbox" id="optQuality" checked><label for="optQuality">Quality</label></div>
+              <div class="check-option"><input type="checkbox" id="optAutofix" checked><label for="optAutofix">Auto-Fix</label></div>
+            </div>
+            <button class="btn btn-primary" onclick="startScan()" id="scanBtn">▶ Scan with Model10</button>
+          </div>
+          <div class="error-box" id="errorBox">
+            <p class="error-title" id="errorTitle">Error</p>
+            <p class="error-detail" id="errorDetail"></p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- RESULTS PANEL -->
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">
-          Scan Output
-          <span class="panel-badge beta" id="verdictBadge" style="display:none;">—</span>
-        </span>
-      </div>
-      <div class="panel-body">
-
-        <!-- Empty state -->
-        <div class="results-empty" id="resultsEmpty">
-          <div class="icon-large">⎔</div>
-          <p>Awaiting code input.</p>
-          <p style="margin-top:8px; font-size:0.6rem;">Model10 3-Layer Diagnostic Funnel</p>
+    <!-- RIGHT: RESULTS -->
+    <div>
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Analysis Results</span>
+          <span class="panel-badge api" id="modeIndicator">AGENT API</span>
         </div>
+        <div class="panel-body">
+          <div id="resultsEmpty"><p>▸ Paste code and click Scan to begin Model10 analysis</p></div>
 
-        <!-- Loading state -->
-        <div class="loading" id="loading">
-          <div class="scan-anim"></div>
-          <p>Analyzing code...</p>
-          <p class="scan-phase" id="scanPhase">Layer 1: AST Validator</p>
-        </div>
-
-        <!-- SQI Results -->
-        <div class="sqi-display" id="sqiDisplay">
-          <div class="sqi-label">Saikou Quality Index</div>
-          <div class="sqi-ring" id="sqiRing" style="--sqi: 0;">
-            <span class="sqi-value" id="sqiValue">0</span>
-          </div>
-          <div class="sqi-verdict" id="sqiVerdict">—</div>
-
-          <!-- Layer breakdown -->
-          <div class="layer-status" id="layerStatus">
-            <div class="layer-row">
-              <span class="layer-name"><span class="layer-num">L1</span> AST Validator</span>
-              <span class="layer-result" id="layer1Result">—</span>
-            </div>
-            <div class="layer-row">
-              <span class="layer-name"><span class="layer-num">L2</span> ASC Engine</span>
-              <span class="layer-result" id="layer2Result">—</span>
-            </div>
-            <div class="layer-row">
-              <span class="layer-name"><span class="layer-num">L3</span> Zero-Guessing</span>
-              <span class="layer-result" id="layer3Result">—</span>
-            </div>
+          <div id="loading">
+            <div class="spinner"></div>
+            <div class="scan-phase" id="scanPhase">Initializing Model10 Engine...</div>
+            <div class="scan-sub" id="scanSub">Connecting to AutoGPT agent...</div>
           </div>
 
-          <!-- Issues -->
-          <div class="issues-list" id="issuesList"></div>
+          <div id="sqiDisplay">
+            <div class="sqi-section">
+              <div class="sqi-left">
+                <div class="sqi-ring" id="sqiRing" style="--sqi: 0;">
+                  <span class="sqi-value" id="sqiValue">0</span>
+                  <span class="sqi-label">SQI</span>
+                </div>
+                <div class="sqi-verdict" id="sqiVerdict">—</div>
+              </div>
+              <div class="sqi-right">
+                <div class="layer-row">
+                  <span class="layer-name"><span class="layer-num">L1</span> AST Validator</span>
+                  <span class="layer-result" id="layer1Result">—</span>
+                </div>
+                <div class="layer-row">
+                  <span class="layer-name"><span class="layer-num">L2</span> ASC Engine</span>
+                  <span class="layer-result" id="layer2Result">—</span>
+                </div>
+                <div class="layer-row">
+                  <span class="layer-name"><span class="layer-num">L3</span> Zero-Guessing</span>
+                  <span class="layer-result" id="layer3Result">—</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Issues -->
+            <div class="issues-list" id="issuesList"></div>
+
+            <!-- Hardened Code Output -->
+            <div class="hardened-section" id="hardenedSection" style="display:none;">
+              <h4>🛡 AI-Hardened Code</h4>
+              <pre class="hardened-code" id="hardenedCode"></pre>
+            </div>
+
+            <!-- Final Verification -->
+            <div class="hardened-section" id="verificationSection" style="display:none;">
+              <h4 style="color: var(--acid);">✓ Final Verification</h4>
+              <pre class="hardened-code" id="verificationResult" style="border-color: rgba(0,255,209,0.3);"></pre>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -515,7 +450,7 @@
     <p><span class="footer-brand">SAIKOU.TECH</span> — Model10 Code Intelligence Engine</p>
     <p style="margin-top:8px;">
       Powered by <a href="https://agpt.co" target="_blank">AutoGPT</a> •
-      Agent: <a href="#">Model10 Code Scanner</a> •
+      Agent: <a href="https://platform.agpt.co/library/agents/c34a3488-97a8-420f-a7aa-ae4b77f48b82" target="_blank">Model10 Code Scanner</a> •
       3-Layer Diagnostic Funnel
     </p>
   </footer>
@@ -523,17 +458,67 @@
 </div>
 
 <script>
-// ── STATE ──
+// ── CONFIG ──
+const AGENT_GRAPH_ID = '64f8d604-e8c8-4611-8203-6383667227f9';
+const AGENT_VERSION = 1;
+const API_BASE = 'https://backend.agpt.co/external-api/v1';
+
+let scanMode = 'agent'; // 'agent' or 'local'
 let scanCount = parseInt(localStorage.getItem('m10_scanCount') || '0');
 let issuesTotal = parseInt(localStorage.getItem('m10_issuesTotal') || '0');
 document.getElementById('scan-count').textContent = scanCount;
 document.getElementById('issues-count').textContent = issuesTotal;
 
+// Load saved API key
+const savedKey = localStorage.getItem('m10_apiKey') || '';
+if (savedKey) {
+  document.getElementById('apiKeyInput').value = savedKey;
+  updateApiStatus(true);
+}
+
+// ── API KEY HANDLING ──
+document.getElementById('apiKeyInput').addEventListener('change', function() {
+  const key = this.value.trim();
+  if (key) {
+    localStorage.setItem('m10_apiKey', key);
+    updateApiStatus(true);
+    addActivity('🔑', 'API Key Configured', 'AutoGPT External API connected');
+  } else {
+    localStorage.removeItem('m10_apiKey');
+    updateApiStatus(false);
+  }
+});
+
+function updateApiStatus(connected) {
+  const dot = document.getElementById('apiDot');
+  const text = document.getElementById('apiStatusText');
+  if (connected) {
+    dot.className = 'dot connected';
+    text.textContent = 'CONNECTED';
+    text.style.color = 'var(--acid)';
+  } else {
+    dot.className = 'dot disconnected';
+    text.textContent = 'NOT CONNECTED';
+    text.style.color = 'var(--red)';
+  }
+}
+
+// ── MODE TOGGLE ──
+function setMode(mode) {
+  scanMode = mode;
+  document.getElementById('modeAgent').className = mode === 'agent' ? 'active' : '';
+  document.getElementById('modeLocal').className = mode === 'local' ? 'active' : '';
+  document.getElementById('apiConfigBar').style.display = mode === 'agent' ? 'flex' : 'none';
+  document.getElementById('modeIndicator').textContent = mode === 'agent' ? 'AGENT API' : 'LOCAL SCAN';
+  document.getElementById('modeIndicator').className = mode === 'agent' ? 'panel-badge api' : 'panel-badge beta';
+  document.getElementById('scanBtn').textContent = mode === 'agent' ? '▶ Scan with Model10' : '▶ Local Scan';
+}
+
 // ── LANGUAGE DETECTION ──
 document.getElementById('codeInput').addEventListener('input', function() {
   const code = this.value;
   let lang = '';
-  if (code.includes('def ') || code.includes('import ') || code.includes('class ') && code.includes(':')) lang = 'PYTHON';
+  if (code.includes('def ') || code.includes('import ') || (code.includes('class ') && code.includes(':'))) lang = 'PYTHON';
   else if (code.includes('function ') || code.includes('const ') || code.includes('let ') || code.includes('=>')) lang = 'JAVASCRIPT';
   else if (code.includes('public class') || code.includes('private void') || code.includes('System.out')) lang = 'JAVA';
   else if (code.includes('<?php') || code.includes('$_')) lang = 'PHP';
@@ -542,18 +527,18 @@ document.getElementById('codeInput').addEventListener('input', function() {
   document.getElementById('langDetected').textContent = lang ? `Detected: ${lang}` : '';
 });
 
-// ── SECURITY RULES (mirrors Model10 engine) ──
+// ── LOCAL SECURITY RULES (fallback) ──
 const SECURITY_RULES = [
-  { id: 'CWE-89',  name: 'SQL Injection',        severity: 'critical', pattern: /f['"].*\{.*\}.*(?:SELECT|INSERT|UPDATE|DELETE|DROP)/i, desc: 'Unsanitized user input in SQL query' },
-  { id: 'CWE-94',  name: 'Code Injection',        severity: 'critical', pattern: /eval\s*\(|exec\s*\(|compile\s*\(/, desc: 'Arbitrary code execution via eval/exec' },
-  { id: 'CWE-798', name: 'Hardcoded Secrets',      severity: 'high',     pattern: /(?:password|secret|api_key|token)\s*=\s*['"][^'"]{3,}/i, desc: 'Credentials embedded in source code' },
-  { id: 'CWE-78',  name: 'Shell Injection',        severity: 'critical', pattern: /shell\s*=\s*True|os\.system\s*\(|subprocess.*shell/, desc: 'OS command injection via shell execution' },
-  { id: 'CWE-22',  name: 'Path Traversal',         severity: 'high',     pattern: /\.\.\/|\.\.\\|os\.path\.join.*\.\./,  desc: 'Directory traversal vulnerability' },
-  { id: 'CWE-319', name: 'Insecure Protocol',      severity: 'medium',   pattern: /http:\/\/(?!localhost|127\.0)/,       desc: 'Cleartext HTTP transmission' },
-  { id: 'CWE-755', name: 'Bare Exception',         severity: 'medium',   pattern: /except\s*:|catch\s*\(\s*\)/,          desc: 'Overly broad exception handling' },
-  { id: 'CWE-489', name: 'Debug Exposure',         severity: 'medium',   pattern: /debug\s*=\s*True|DEBUG\s*=\s*True|console\.log/i, desc: 'Debug mode enabled in production' },
-  { id: 'CWE-502', name: 'Unsafe Deserialization', severity: 'critical', pattern: /pickle\.loads?|yaml\.load\s*\((?!.*Loader)/,  desc: 'Untrusted data deserialization' },
-  { id: 'CWE-942', name: 'Permissive CORS',        severity: 'high',     pattern: /Access-Control-Allow-Origin.*\*|CORS\(.*origins?\s*=\s*['"]?\*/i, desc: 'Wildcard CORS allows any origin' },
+  { id: 'CWE-89',  name: 'SQL Injection',         severity: 'critical', pattern: /f['"].*\{.*\}.*(?:SELECT|INSERT|UPDATE|DELETE|DROP)/i, desc: 'Unsanitized user input in SQL query' },
+  { id: 'CWE-94',  name: 'Code Injection',         severity: 'critical', pattern: /eval\s*\(|exec\s*\(|compile\s*\(/, desc: 'Arbitrary code execution via eval/exec' },
+  { id: 'CWE-798', name: 'Hardcoded Secrets',       severity: 'high',     pattern: /(?:password|secret|api_key|token)\s*=\s*['"][^'"]{3,}/i, desc: 'Credentials embedded in source code' },
+  { id: 'CWE-78',  name: 'Shell Injection',         severity: 'critical', pattern: /shell\s*=\s*True|os\.system\s*\(|subprocess.*shell/, desc: 'OS command injection via shell execution' },
+  { id: 'CWE-22',  name: 'Path Traversal',          severity: 'high',     pattern: /\.\.\/|\.\.\\|os\.path\.join.*\.\./, desc: 'Directory traversal vulnerability' },
+  { id: 'CWE-319', name: 'Insecure Protocol',       severity: 'medium',   pattern: /http:\/\/(?!localhost|127\.0)/, desc: 'Cleartext HTTP transmission' },
+  { id: 'CWE-755', name: 'Bare Exception',          severity: 'medium',   pattern: /except\s*:|catch\s*\(\s*\)/, desc: 'Overly broad exception handling' },
+  { id: 'CWE-489', name: 'Debug Exposure',          severity: 'medium',   pattern: /debug\s*=\s*True|DEBUG\s*=\s*True|console\.log/i, desc: 'Debug mode enabled in production' },
+  { id: 'CWE-502', name: 'Unsafe Deserialization',  severity: 'critical', pattern: /pickle\.loads?|yaml\.load\s*\((?!.*Loader)/, desc: 'Untrusted data deserialization' },
+  { id: 'CWE-942', name: 'Permissive CORS',         severity: 'high',     pattern: /Access-Control-Allow-Origin.*\*|CORS\(.*origins?\s*=\s*['"]?\*/i, desc: 'Wildcard CORS allows any origin' },
 ];
 
 const QUALITY_RULES = [
@@ -568,62 +553,209 @@ async function startScan() {
   const code = document.getElementById('codeInput').value;
   if (!code.trim()) return;
 
-  // Show loading
+  // Hide previous results & errors
   document.getElementById('resultsEmpty').style.display = 'none';
   document.getElementById('sqiDisplay').style.display = 'none';
+  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('hardenedSection').style.display = 'none';
+  document.getElementById('verificationSection').style.display = 'none';
   document.getElementById('loading').style.display = 'block';
+  document.getElementById('scanBtn').disabled = true;
 
-  const phases = ['Layer 1: AST Validator', 'Layer 2: ASC Engine', 'Layer 3: Zero-Guessing Gateway'];
+  if (scanMode === 'agent') {
+    await runAgentScan(code);
+  } else {
+    await runLocalScan(code);
+  }
+
+  document.getElementById('scanBtn').disabled = false;
+}
+
+// ── AGENT API SCAN ──
+async function runAgentScan(code) {
+  const apiKey = document.getElementById('apiKeyInput').value.trim();
+  if (!apiKey) {
+    showError('API Key Required', 'Enter your AutoGPT API key in the config bar above, or switch to Local mode.');
+    return;
+  }
+
+  // Detect language
+  let lang = 'python';
+  const lower = code.toLowerCase();
+  if (lower.includes('function ') || lower.includes('const ') || lower.includes('=>')) lang = 'javascript';
+  else if (lower.includes('public class') || lower.includes('system.out')) lang = 'java';
+  else if (lower.includes('<?php') || lower.includes('$_')) lang = 'php';
+  else if (lower.includes('#include') || lower.includes('int main')) lang = 'c';
+  else if (lower.includes('fn ') || lower.includes('let mut')) lang = 'rust';
+
+  const phases = [
+    'Connecting to AutoGPT Agent...',
+    'Executing Model10 Engine...',
+    'Layer 1: AST Validator running...',
+    'Layer 2: ASC Engine analyzing...',
+    'Layer 3: Zero-Guessing Gateway...',
+    'AI Auto-Fix generating hardened code...',
+    'Re-scanning hardened code...',
+    'Compiling results...'
+  ];
   let phaseIdx = 0;
-
   const phaseInterval = setInterval(() => {
-    phaseIdx = (phaseIdx + 1) % phases.length;
+    phaseIdx = Math.min(phaseIdx + 1, phases.length - 1);
     document.getElementById('scanPhase').textContent = phases[phaseIdx];
-  }, 700);
+    document.getElementById('scanSub').textContent = `Step ${phaseIdx + 1} of ${phases.length}`;
+  }, 3000);
 
-  await new Promise(r => setTimeout(r, 2200));
-  clearInterval(phaseInterval);
+  try {
+    // Step 1: Execute the agent
+    document.getElementById('scanPhase').textContent = phases[0];
+    document.getElementById('scanSub').textContent = 'Sending code to Model10 agent...';
 
-  // Run analysis
-  const issues = [];
-  let securityIssues = 0;
-  let qualityIssues = 0;
+    const execResponse = await fetch(`${API_BASE}/graphs/${AGENT_GRAPH_ID}/execute/${AGENT_VERSION}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': apiKey
+      },
+      body: JSON.stringify({
+        node_input: {
+          code_input: code,
+          language: lang
+        }
+      })
+    });
 
-  // Security scan
-  if (document.getElementById('optSecurity').checked) {
-    SECURITY_RULES.forEach(rule => {
-      if (rule.pattern.test(code)) {
-        issues.push({ ...rule, type: 'security' });
-        securityIssues++;
+    if (!execResponse.ok) {
+      const errText = await execResponse.text();
+      throw new Error(`API ${execResponse.status}: ${errText}`);
+    }
+
+    const execData = await execResponse.json();
+    const executionId = execData.execution_id || execData.id;
+
+    if (!executionId) {
+      throw new Error('No execution ID returned. Response: ' + JSON.stringify(execData));
+    }
+
+    addActivity('🚀', 'Agent Execution Started', `Execution ID: ${executionId.substring(0, 8)}...`);
+
+    // Step 2: Poll for results
+    let result = null;
+    let attempts = 0;
+    const maxAttempts = 60; // 5 minutes max
+
+    while (attempts < maxAttempts) {
+      await new Promise(r => setTimeout(r, 5000));
+      attempts++;
+
+      const resultResponse = await fetch(`${API_BASE}/graphs/${AGENT_GRAPH_ID}/executions/${executionId}/results`, {
+        headers: { 'X-API-Key': apiKey }
+      });
+
+      if (!resultResponse.ok) {
+        if (resultResponse.status === 404) continue; // Not ready yet
+        const errText = await resultResponse.text();
+        throw new Error(`Poll ${resultResponse.status}: ${errText}`);
       }
+
+      const resultData = await resultResponse.json();
+
+      if (resultData.status === 'COMPLETED' || resultData.status === 'completed') {
+        result = resultData;
+        break;
+      } else if (resultData.status === 'FAILED' || resultData.status === 'failed') {
+        throw new Error('Agent execution failed: ' + JSON.stringify(resultData.output || resultData));
+      }
+      // If still running, continue polling
+      document.getElementById('scanSub').textContent = `Polling... attempt ${attempts}/${maxAttempts}`;
+    }
+
+    clearInterval(phaseInterval);
+
+    if (!result) {
+      throw new Error('Agent execution timed out after 5 minutes.');
+    }
+
+    // Step 3: Parse and display results
+    displayAgentResults(result);
+
+  } catch (err) {
+    clearInterval(phaseInterval);
+    document.getElementById('loading').style.display = 'none';
+    showError('Agent Execution Failed', err.message);
+    addActivity('❌', 'Scan Failed', err.message.substring(0, 100));
+  }
+}
+
+function displayAgentResults(result) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('sqiDisplay').style.display = 'block';
+
+  // Parse outputs from the agent
+  let initialScan = '';
+  let hardenedCode = '';
+  let finalVerification = '';
+
+  // The output is an array of objects with output names
+  const outputs = result.output || [];
+  if (Array.isArray(outputs)) {
+    outputs.forEach(o => {
+      if (o.initial_scan) initialScan = o.initial_scan;
+      if (o.hardened_code) hardenedCode = o.hardened_code;
+      if (o.final_verification) finalVerification = o.final_verification;
     });
   }
 
-  // Quality audit
-  if (document.getElementById('optQuality').checked) {
-    QUALITY_RULES.forEach(rule => {
-      if (rule.check(code)) {
-        issues.push({ ...rule, type: 'quality', id: 'QA' });
-        qualityIssues++;
-      }
-    });
+  // Try to parse SQI from initial scan text
+  let sqi = 0;
+  let issues = [];
+  let l1Pass = false, l2Pass = false, l3Pass = false;
+
+  // Parse JSON from initial_scan if possible
+  try {
+    // Look for JSON in the output
+    const jsonMatch = initialScan.match(/\{[\s\S]*"sqi"[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      sqi = parsed.sqi || parsed.SQI || 0;
+      l1Pass = parsed.layer1_pass || parsed.layers?.l1?.pass || false;
+      l2Pass = parsed.layer2_pass || parsed.layers?.l2?.pass || false;
+      l3Pass = parsed.layer3_pass || parsed.layers?.l3?.pass || false;
+      issues = parsed.issues || parsed.findings || [];
+    }
+  } catch(e) {
+    // Fallback: try to extract SQI from text
+    const sqiMatch = initialScan.match(/SQI[:\s]+(\d+)/i);
+    if (sqiMatch) sqi = parseInt(sqiMatch[1]);
+
+    const verifiedMatch = initialScan.match(/VERIFIED_10/i);
+    if (verifiedMatch) { sqi = 100; l1Pass = true; l2Pass = true; l3Pass = true; }
   }
 
-  // Calculate SQI
-  const criticals = issues.filter(i => i.severity === 'critical').length;
-  const highs = issues.filter(i => i.severity === 'high').length;
-  const mediums = issues.filter(i => i.severity === 'medium').length;
-  const lows = issues.filter(i => i.severity === 'low').length;
+  // Also check final verification for the final SQI
+  if (finalVerification) {
+    try {
+      const jsonMatch2 = finalVerification.match(/\{[\s\S]*"sqi"[\s\S]*\}/);
+      if (jsonMatch2) {
+        const parsed2 = JSON.parse(jsonMatch2[0]);
+        const finalSqi = parsed2.sqi || parsed2.SQI || 0;
+        if (finalSqi > sqi) {
+          sqi = finalSqi;
+          l1Pass = parsed2.layer1_pass || parsed2.layers?.l1?.pass || sqi === 100;
+          l2Pass = parsed2.layer2_pass || parsed2.layers?.l2?.pass || sqi === 100;
+          l3Pass = parsed2.layer3_pass || parsed2.layers?.l3?.pass || sqi === 100;
+        }
+      }
+    } catch(e) {
+      const sqiMatch2 = finalVerification.match(/SQI[:\s]+(\d+)/i);
+      if (sqiMatch2) {
+        const finalSqi = parseInt(sqiMatch2[1]);
+        if (finalSqi > sqi) sqi = finalSqi;
+      }
+      if (finalVerification.match(/VERIFIED_10/i)) { sqi = 100; l1Pass = true; l2Pass = true; l3Pass = true; }
+    }
+  }
 
-  const deduction = (criticals * 25) + (highs * 15) + (mediums * 8) + (lows * 3);
-  const sqi = Math.max(0, 100 - deduction);
-
-  // Layer results
-  const layer1Pass = criticals === 0;
-  const layer2Pass = highs === 0 && mediums === 0;
-  const layer3Pass = sqi === 100;
-
-  // Verdict
+  // Determine verdict
   let verdict, verdictClass;
   if (sqi === 100) { verdict = 'VERIFIED_10'; verdictClass = 'verified'; }
   else if (sqi >= 60) { verdict = 'DIAGNOSTIC_MODE'; verdictClass = 'diagnostic'; }
@@ -639,13 +771,9 @@ async function startScan() {
   document.getElementById('sqi-stat').textContent = sqi + '/100';
   document.getElementById('sqi-stat').className = `stat-value ${sqi === 100 ? 'acid' : sqi >= 60 ? 'amber' : 'red'}`;
 
-  const passCount = [layer1Pass, layer2Pass, layer3Pass].filter(Boolean).length;
+  const passCount = [l1Pass, l2Pass, l3Pass].filter(Boolean).length;
   document.getElementById('layer-stat').textContent = `${passCount}/3 PASS`;
   document.getElementById('layer-stat').className = `stat-value ${passCount === 3 ? 'acid' : passCount >= 2 ? 'amber' : 'red'}`;
-
-  // Show results
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('sqiDisplay').style.display = 'block';
 
   // SQI Ring
   const ring = document.getElementById('sqiRing');
@@ -665,17 +793,123 @@ async function startScan() {
   badge.className = `panel-badge ${sqi === 100 ? 'live' : 'beta'}`;
 
   // Layer results
-  function setLayerResult(id, pass) {
-    const el = document.getElementById(id);
-    const status = pass ? 'pass' : 'fail';
-    el.className = `layer-result ${status}`;
-    el.innerHTML = `<span class="status-dot ${status}"></span>${pass ? 'PASS' : 'FAIL'}`;
+  setLayerResult('layer1Result', l1Pass);
+  setLayerResult('layer2Result', l2Pass);
+  setLayerResult('layer3Result', l3Pass);
+
+  // Issues list
+  const list = document.getElementById('issuesList');
+  if (issues.length === 0 && sqi === 100) {
+    list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--acid); font-size:0.72rem;">✓ No vulnerabilities detected — code is clean.</div>';
+  } else if (issues.length > 0) {
+    list.innerHTML = issues.map(issue => `
+      <div class="issue-item ${issue.severity || 'medium'}">
+        <span class="issue-badge ${issue.severity || 'medium'}">${issue.severity || 'info'}</span>
+        <div class="issue-info">
+          <h4>${issue.name || issue.rule || issue.title || 'Issue'}</h4>
+          <p>${issue.description || issue.desc || issue.message || ''}</p>
+          ${issue.cwe ? `<div class="issue-cwe">${issue.cwe}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } else {
+    list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--dim); font-size:0.65rem;">Raw scan output shown below</div>';
   }
+
+  // Show hardened code if available
+  if (hardenedCode) {
+    document.getElementById('hardenedSection').style.display = 'block';
+    document.getElementById('hardenedCode').textContent = hardenedCode;
+  }
+
+  // Show final verification if available
+  if (finalVerification) {
+    document.getElementById('verificationSection').style.display = 'block';
+    document.getElementById('verificationResult').textContent = finalVerification;
+  }
+
+  // Activity log
+  addActivity('◈', `Agent Scan Complete — SQI ${sqi}/100`, `${verdict} • ${issues.length} issue${issues.length !== 1 ? 's' : ''} found`);
+}
+
+// ── LOCAL SCAN (fallback) ──
+async function runLocalScan(code) {
+  const phases = ['Layer 1: AST Validator', 'Layer 2: ASC Engine', 'Layer 3: Zero-Guessing Gateway'];
+  let phaseIdx = 0;
+
+  const phaseInterval = setInterval(() => {
+    phaseIdx = (phaseIdx + 1) % phases.length;
+    document.getElementById('scanPhase').textContent = phases[phaseIdx];
+    document.getElementById('scanSub').textContent = 'Running client-side analysis...';
+  }, 700);
+
+  await new Promise(r => setTimeout(r, 2200));
+  clearInterval(phaseInterval);
+
+  const issues = [];
+  let securityIssues = 0, qualityIssues = 0;
+
+  if (document.getElementById('optSecurity').checked) {
+    SECURITY_RULES.forEach(rule => {
+      if (rule.pattern.test(code)) { issues.push({ ...rule, type: 'security' }); securityIssues++; }
+    });
+  }
+  if (document.getElementById('optQuality').checked) {
+    QUALITY_RULES.forEach(rule => {
+      if (rule.check(code)) { issues.push({ ...rule, type: 'quality', id: 'QA' }); qualityIssues++; }
+    });
+  }
+
+  const criticals = issues.filter(i => i.severity === 'critical').length;
+  const highs = issues.filter(i => i.severity === 'high').length;
+  const mediums = issues.filter(i => i.severity === 'medium').length;
+  const lows = issues.filter(i => i.severity === 'low').length;
+  const deduction = (criticals * 25) + (highs * 15) + (mediums * 8) + (lows * 3);
+  const sqi = Math.max(0, 100 - deduction);
+
+  const layer1Pass = criticals === 0;
+  const layer2Pass = highs === 0 && mediums === 0;
+  const layer3Pass = sqi === 100;
+
+  let verdict, verdictClass;
+  if (sqi === 100) { verdict = 'VERIFIED_10'; verdictClass = 'verified'; }
+  else if (sqi >= 60) { verdict = 'DIAGNOSTIC_MODE'; verdictClass = 'diagnostic'; }
+  else { verdict = 'CRITICAL_FAIL'; verdictClass = 'critical'; }
+
+  scanCount++; issuesTotal += issues.length;
+  localStorage.setItem('m10_scanCount', scanCount);
+  localStorage.setItem('m10_issuesTotal', issuesTotal);
+  document.getElementById('scan-count').textContent = scanCount;
+  document.getElementById('issues-count').textContent = issuesTotal;
+  document.getElementById('sqi-stat').textContent = sqi + '/100';
+  document.getElementById('sqi-stat').className = `stat-value ${sqi === 100 ? 'acid' : sqi >= 60 ? 'amber' : 'red'}`;
+
+  const passCount = [layer1Pass, layer2Pass, layer3Pass].filter(Boolean).length;
+  document.getElementById('layer-stat').textContent = `${passCount}/3 PASS`;
+  document.getElementById('layer-stat').className = `stat-value ${passCount === 3 ? 'acid' : passCount >= 2 ? 'amber' : 'red'}`;
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('sqiDisplay').style.display = 'block';
+
+  const ring = document.getElementById('sqiRing');
+  ring.style.setProperty('--sqi', sqi);
+  ring.className = `sqi-ring ${sqi === 100 ? 'verified-glow' : sqi >= 60 ? 'amber-ring' : 'red-ring'}`;
+  document.getElementById('sqiValue').textContent = sqi;
+  document.getElementById('sqiValue').style.color = sqi === 100 ? 'var(--acid)' : sqi >= 60 ? 'var(--amber)' : 'var(--red)';
+
+  const verdictEl = document.getElementById('sqiVerdict');
+  verdictEl.textContent = verdict;
+  verdictEl.className = `sqi-verdict ${verdictClass}`;
+
+  const badge = document.getElementById('verdictBadge');
+  badge.style.display = 'inline';
+  badge.textContent = verdict;
+  badge.className = `panel-badge ${sqi === 100 ? 'live' : 'beta'}`;
+
   setLayerResult('layer1Result', layer1Pass);
   setLayerResult('layer2Result', layer2Pass);
   setLayerResult('layer3Result', layer3Pass);
 
-  // Issues list
   const list = document.getElementById('issuesList');
   if (issues.length === 0) {
     list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--acid); font-size:0.72rem;">✓ No vulnerabilities detected — code is clean.</div>';
@@ -692,8 +926,23 @@ async function startScan() {
     `).join('');
   }
 
-  // Activity log
-  addActivity('◈', `Scan Complete — SQI ${sqi}/100`, `${verdict} • ${issues.length} issue${issues.length !== 1 ? 's' : ''} found`);
+  addActivity('◈', `Local Scan Complete — SQI ${sqi}/100`, `${verdict} • ${issues.length} issue${issues.length !== 1 ? 's' : ''} found`);
+}
+
+// ── HELPERS ──
+function setLayerResult(id, pass) {
+  const el = document.getElementById(id);
+  const status = pass ? 'pass' : 'fail';
+  el.className = `layer-result ${status}`;
+  el.innerHTML = `<span class="status-dot ${status}"></span>${pass ? 'PASS' : 'FAIL'}`;
+}
+
+function showError(title, detail) {
+  document.getElementById('loading').style.display = 'none';
+  const box = document.getElementById('errorBox');
+  document.getElementById('errorTitle').textContent = title;
+  document.getElementById('errorDetail').textContent = detail;
+  box.style.display = 'block';
 }
 
 function addActivity(icon, title, desc) {
@@ -715,10 +964,535 @@ function showHistory() {
 function exportReport() {
   const data = {
     engine: 'Saikou Model10',
+    mode: scanMode,
     sqi: document.getElementById('sqiValue')?.textContent || '—',
     verdict: document.getElementById('sqiVerdict')?.textContent || '—',
     totalScans: scanCount,
     issuesTotal: issuesTotal,
+    agentId: AGENT_GRAPH_ID,
+    exportDate: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'm10-report-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+}
+</script>
+</body>
+</html>
+// ── CONFIG ──
+const AGENT_GRAPH_ID = '64f8d604-e8c8-4611-8203-6383667227f9';
+const AGENT_VERSION = 1;
+const API_BASE = 'https://backend.agpt.co/external-api/v1';
+
+let scanMode = 'agent'; // 'agent' or 'local'
+let scanCount = parseInt(localStorage.getItem('m10_scanCount') || '0');
+let issuesTotal = parseInt(localStorage.getItem('m10_issuesTotal') || '0');
+document.getElementById('scan-count').textContent = scanCount;
+document.getElementById('issues-count').textContent = issuesTotal;
+
+// Load saved API key
+const savedKey = localStorage.getItem('m10_apiKey') || '';
+if (savedKey) {
+  document.getElementById('apiKeyInput').value = savedKey;
+  updateApiStatus(true);
+}
+
+// ── API KEY HANDLING ──
+document.getElementById('apiKeyInput').addEventListener('change', function() {
+  const key = this.value.trim();
+  if (key) {
+    localStorage.setItem('m10_apiKey', key);
+    updateApiStatus(true);
+    addActivity('🔑', 'API Key Configured', 'AutoGPT External API connected');
+  } else {
+    localStorage.removeItem('m10_apiKey');
+    updateApiStatus(false);
+  }
+});
+
+function updateApiStatus(connected) {
+  const dot = document.getElementById('apiDot');
+  const text = document.getElementById('apiStatusText');
+  if (connected) {
+    dot.className = 'dot connected';
+    text.textContent = 'CONNECTED';
+    text.style.color = 'var(--acid)';
+  } else {
+    dot.className = 'dot disconnected';
+    text.textContent = 'NOT CONNECTED';
+    text.style.color = 'var(--red)';
+  }
+}
+
+// ── MODE TOGGLE ──
+function setMode(mode) {
+  scanMode = mode;
+  document.getElementById('modeAgent').className = mode === 'agent' ? 'active' : '';
+  document.getElementById('modeLocal').className = mode === 'local' ? 'active' : '';
+  document.getElementById('apiConfigBar').style.display = mode === 'agent' ? 'flex' : 'none';
+  document.getElementById('modeIndicator').textContent = mode === 'agent' ? 'AGENT API' : 'LOCAL SCAN';
+  document.getElementById('modeIndicator').className = mode === 'agent' ? 'panel-badge api' : 'panel-badge beta';
+  document.getElementById('scanBtn').textContent = mode === 'agent' ? '▶ Scan with Model10' : '▶ Local Scan';
+}
+
+// ── LANGUAGE DETECTION ──
+document.getElementById('codeInput').addEventListener('input', function() {
+  const code = this.value;
+  let lang = '';
+  if (code.includes('def ') || code.includes('import ') || (code.includes('class ') && code.includes(':'))) lang = 'PYTHON';
+  else if (code.includes('function ') || code.includes('const ') || code.includes('let ') || code.includes('=>')) lang = 'JAVASCRIPT';
+  else if (code.includes('public class') || code.includes('private void') || code.includes('System.out')) lang = 'JAVA';
+  else if (code.includes('<?php') || code.includes('$_')) lang = 'PHP';
+  else if (code.includes('#include') || code.includes('int main')) lang = 'C/C++';
+  else if (code.includes('fn ') || code.includes('let mut')) lang = 'RUST';
+  document.getElementById('langDetected').textContent = lang ? `Detected: ${lang}` : '';
+});
+
+// ── LOCAL SECURITY RULES (fallback) ──
+const SECURITY_RULES = [
+  { id: 'CWE-89',  name: 'SQL Injection',         severity: 'critical', pattern: /f['"].*\{.*\}.*(?:SELECT|INSERT|UPDATE|DELETE|DROP)/i, desc: 'Unsanitized user input in SQL query' },
+  { id: 'CWE-94',  name: 'Code Injection',         severity: 'critical', pattern: /eval\s*\(|exec\s*\(|compile\s*\(/, desc: 'Arbitrary code execution via eval/exec' },
+  { id: 'CWE-798', name: 'Hardcoded Secrets',       severity: 'high',     pattern: /(?:password|secret|api_key|token)\s*=\s*['"][^'"]{3,}/i, desc: 'Credentials embedded in source code' },
+  { id: 'CWE-78',  name: 'Shell Injection',         severity: 'critical', pattern: /shell\s*=\s*True|os\.system\s*\(|subprocess.*shell/, desc: 'OS command injection via shell execution' },
+  { id: 'CWE-22',  name: 'Path Traversal',          severity: 'high',     pattern: /\.\.\/|\.\.\\|os\.path\.join.*\.\./, desc: 'Directory traversal vulnerability' },
+  { id: 'CWE-319', name: 'Insecure Protocol',       severity: 'medium',   pattern: /http:\/\/(?!localhost|127\.0)/, desc: 'Cleartext HTTP transmission' },
+  { id: 'CWE-755', name: 'Bare Exception',          severity: 'medium',   pattern: /except\s*:|catch\s*\(\s*\)/, desc: 'Overly broad exception handling' },
+  { id: 'CWE-489', name: 'Debug Exposure',          severity: 'medium',   pattern: /debug\s*=\s*True|DEBUG\s*=\s*True|console\.log/i, desc: 'Debug mode enabled in production' },
+  { id: 'CWE-502', name: 'Unsafe Deserialization',  severity: 'critical', pattern: /pickle\.loads?|yaml\.load\s*\((?!.*Loader)/, desc: 'Untrusted data deserialization' },
+  { id: 'CWE-942', name: 'Permissive CORS',         severity: 'high',     pattern: /Access-Control-Allow-Origin.*\*|CORS\(.*origins?\s*=\s*['"]?\*/i, desc: 'Wildcard CORS allows any origin' },
+];
+
+const QUALITY_RULES = [
+  { name: 'No Documentation',   severity: 'low', check: (code) => !code.includes('#') && !code.includes('//') && !code.includes('"""'), desc: 'Code lacks comments or docstrings' },
+  { name: 'Long Lines',         severity: 'low', check: (code) => code.split('\n').some(l => l.length > 120), desc: 'Lines exceeding 120 characters' },
+  { name: 'God Function',       severity: 'medium', check: (code) => code.split('\n').length > 80, desc: 'Monolithic code — consider modular design' },
+  { name: 'Magic Numbers',      severity: 'low', check: (code) => /(?<!=)\s\d{3,}(?!\s*[;:=])/.test(code), desc: 'Unnamed numeric constants in logic' },
+];
+
+// ── SCAN ENGINE ──
+async function startScan() {
+  const code = document.getElementById('codeInput').value;
+  if (!code.trim()) return;
+
+  // Hide previous results & errors
+  document.getElementById('resultsEmpty').style.display = 'none';
+  document.getElementById('sqiDisplay').style.display = 'none';
+  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('hardenedSection').style.display = 'none';
+  document.getElementById('verificationSection').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('scanBtn').disabled = true;
+
+  if (scanMode === 'agent') {
+    await runAgentScan(code);
+  } else {
+    await runLocalScan(code);
+  }
+
+  document.getElementById('scanBtn').disabled = false;
+}
+
+// ── AGENT API SCAN ──
+async function runAgentScan(code) {
+  const apiKey = document.getElementById('apiKeyInput').value.trim();
+  if (!apiKey) {
+    showError('API Key Required', 'Enter your AutoGPT API key in the config bar above, or switch to Local mode.');
+    return;
+  }
+
+  // Detect language
+  let lang = 'python';
+  const lower = code.toLowerCase();
+  if (lower.includes('function ') || lower.includes('const ') || lower.includes('=>')) lang = 'javascript';
+  else if (lower.includes('public class') || lower.includes('system.out')) lang = 'java';
+  else if (lower.includes('<?php') || lower.includes('$_')) lang = 'php';
+  else if (lower.includes('#include') || lower.includes('int main')) lang = 'c';
+  else if (lower.includes('fn ') || lower.includes('let mut')) lang = 'rust';
+
+  const phases = [
+    'Connecting to AutoGPT Agent...',
+    'Executing Model10 Engine...',
+    'Layer 1: AST Validator running...',
+    'Layer 2: ASC Engine analyzing...',
+    'Layer 3: Zero-Guessing Gateway...',
+    'AI Auto-Fix generating hardened code...',
+    'Re-scanning hardened code...',
+    'Compiling results...'
+  ];
+  let phaseIdx = 0;
+  const phaseInterval = setInterval(() => {
+    phaseIdx = Math.min(phaseIdx + 1, phases.length - 1);
+    document.getElementById('scanPhase').textContent = phases[phaseIdx];
+    document.getElementById('scanSub').textContent = `Step ${phaseIdx + 1} of ${phases.length}`;
+  }, 3000);
+
+  try {
+    // Step 1: Execute the agent
+    document.getElementById('scanPhase').textContent = phases[0];
+    document.getElementById('scanSub').textContent = 'Sending code to Model10 agent...';
+
+    const execResponse = await fetch(`${API_BASE}/graphs/${AGENT_GRAPH_ID}/execute/${AGENT_VERSION}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': apiKey
+      },
+      body: JSON.stringify({
+        node_input: {
+          code_input: code,
+          language: lang
+        }
+      })
+    });
+
+    if (!execResponse.ok) {
+      const errText = await execResponse.text();
+      throw new Error(`API ${execResponse.status}: ${errText}`);
+    }
+
+    const execData = await execResponse.json();
+    const executionId = execData.execution_id || execData.id;
+
+    if (!executionId) {
+      throw new Error('No execution ID returned. Response: ' + JSON.stringify(execData));
+    }
+
+    addActivity('🚀', 'Agent Execution Started', `Execution ID: ${executionId.substring(0, 8)}...`);
+
+    // Step 2: Poll for results
+    let result = null;
+    let attempts = 0;
+    const maxAttempts = 60; // 5 minutes max
+
+    while (attempts < maxAttempts) {
+      await new Promise(r => setTimeout(r, 5000));
+      attempts++;
+
+      const resultResponse = await fetch(`${API_BASE}/graphs/${AGENT_GRAPH_ID}/executions/${executionId}/results`, {
+        headers: { 'X-API-Key': apiKey }
+      });
+
+      if (!resultResponse.ok) {
+        if (resultResponse.status === 404) continue; // Not ready yet
+        const errText = await resultResponse.text();
+        throw new Error(`Poll ${resultResponse.status}: ${errText}`);
+      }
+
+      const resultData = await resultResponse.json();
+
+      if (resultData.status === 'COMPLETED' || resultData.status === 'completed') {
+        result = resultData;
+        break;
+      } else if (resultData.status === 'FAILED' || resultData.status === 'failed') {
+        throw new Error('Agent execution failed: ' + JSON.stringify(resultData.output || resultData));
+      }
+      // If still running, continue polling
+      document.getElementById('scanSub').textContent = `Polling... attempt ${attempts}/${maxAttempts}`;
+    }
+
+    clearInterval(phaseInterval);
+
+    if (!result) {
+      throw new Error('Agent execution timed out after 5 minutes.');
+    }
+
+    // Step 3: Parse and display results
+    displayAgentResults(result);
+
+  } catch (err) {
+    clearInterval(phaseInterval);
+    document.getElementById('loading').style.display = 'none';
+    showError('Agent Execution Failed', err.message);
+    addActivity('❌', 'Scan Failed', err.message.substring(0, 100));
+  }
+}
+
+function displayAgentResults(result) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('sqiDisplay').style.display = 'block';
+
+  // Parse outputs from the agent
+  let initialScan = '';
+  let hardenedCode = '';
+  let finalVerification = '';
+
+  // The output is an array of objects with output names
+  const outputs = result.output || [];
+  if (Array.isArray(outputs)) {
+    outputs.forEach(o => {
+      if (o.initial_scan) initialScan = o.initial_scan;
+      if (o.hardened_code) hardenedCode = o.hardened_code;
+      if (o.final_verification) finalVerification = o.final_verification;
+    });
+  }
+
+  // Try to parse SQI from initial scan text
+  let sqi = 0;
+  let issues = [];
+  let l1Pass = false, l2Pass = false, l3Pass = false;
+
+  // Parse JSON from initial_scan if possible
+  try {
+    // Look for JSON in the output
+    const jsonMatch = initialScan.match(/\{[\s\S]*"sqi"[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      sqi = parsed.sqi || parsed.SQI || 0;
+      l1Pass = parsed.layer1_pass || parsed.layers?.l1?.pass || false;
+      l2Pass = parsed.layer2_pass || parsed.layers?.l2?.pass || false;
+      l3Pass = parsed.layer3_pass || parsed.layers?.l3?.pass || false;
+      issues = parsed.issues || parsed.findings || [];
+    }
+  } catch(e) {
+    // Fallback: try to extract SQI from text
+    const sqiMatch = initialScan.match(/SQI[:\s]+(\d+)/i);
+    if (sqiMatch) sqi = parseInt(sqiMatch[1]);
+
+    const verifiedMatch = initialScan.match(/VERIFIED_10/i);
+    if (verifiedMatch) { sqi = 100; l1Pass = true; l2Pass = true; l3Pass = true; }
+  }
+
+  // Also check final verification for the final SQI
+  if (finalVerification) {
+    try {
+      const jsonMatch2 = finalVerification.match(/\{[\s\S]*"sqi"[\s\S]*\}/);
+      if (jsonMatch2) {
+        const parsed2 = JSON.parse(jsonMatch2[0]);
+        const finalSqi = parsed2.sqi || parsed2.SQI || 0;
+        if (finalSqi > sqi) {
+          sqi = finalSqi;
+          l1Pass = parsed2.layer1_pass || parsed2.layers?.l1?.pass || sqi === 100;
+          l2Pass = parsed2.layer2_pass || parsed2.layers?.l2?.pass || sqi === 100;
+          l3Pass = parsed2.layer3_pass || parsed2.layers?.l3?.pass || sqi === 100;
+        }
+      }
+    } catch(e) {
+      const sqiMatch2 = finalVerification.match(/SQI[:\s]+(\d+)/i);
+      if (sqiMatch2) {
+        const finalSqi = parseInt(sqiMatch2[1]);
+        if (finalSqi > sqi) sqi = finalSqi;
+      }
+      if (finalVerification.match(/VERIFIED_10/i)) { sqi = 100; l1Pass = true; l2Pass = true; l3Pass = true; }
+    }
+  }
+
+  // Determine verdict
+  let verdict, verdictClass;
+  if (sqi === 100) { verdict = 'VERIFIED_10'; verdictClass = 'verified'; }
+  else if (sqi >= 60) { verdict = 'DIAGNOSTIC_MODE'; verdictClass = 'diagnostic'; }
+  else { verdict = 'CRITICAL_FAIL'; verdictClass = 'critical'; }
+
+  // Update stats
+  scanCount++;
+  issuesTotal += issues.length;
+  localStorage.setItem('m10_scanCount', scanCount);
+  localStorage.setItem('m10_issuesTotal', issuesTotal);
+  document.getElementById('scan-count').textContent = scanCount;
+  document.getElementById('issues-count').textContent = issuesTotal;
+  document.getElementById('sqi-stat').textContent = sqi + '/100';
+  document.getElementById('sqi-stat').className = `stat-value ${sqi === 100 ? 'acid' : sqi >= 60 ? 'amber' : 'red'}`;
+
+  const passCount = [l1Pass, l2Pass, l3Pass].filter(Boolean).length;
+  document.getElementById('layer-stat').textContent = `${passCount}/3 PASS`;
+  document.getElementById('layer-stat').className = `stat-value ${passCount === 3 ? 'acid' : passCount >= 2 ? 'amber' : 'red'}`;
+
+  // SQI Ring
+  const ring = document.getElementById('sqiRing');
+  ring.style.setProperty('--sqi', sqi);
+  ring.className = `sqi-ring ${sqi === 100 ? 'verified-glow' : sqi >= 60 ? 'amber-ring' : 'red-ring'}`;
+  document.getElementById('sqiValue').textContent = sqi;
+  document.getElementById('sqiValue').style.color = sqi === 100 ? 'var(--acid)' : sqi >= 60 ? 'var(--amber)' : 'var(--red)';
+
+  const verdictEl = document.getElementById('sqiVerdict');
+  verdictEl.textContent = verdict;
+  verdictEl.className = `sqi-verdict ${verdictClass}`;
+
+  // Verdict badge
+  const badge = document.getElementById('verdictBadge');
+  badge.style.display = 'inline';
+  badge.textContent = verdict;
+  badge.className = `panel-badge ${sqi === 100 ? 'live' : 'beta'}`;
+
+  // Layer results
+  setLayerResult('layer1Result', l1Pass);
+  setLayerResult('layer2Result', l2Pass);
+  setLayerResult('layer3Result', l3Pass);
+
+  // Issues list
+  const list = document.getElementById('issuesList');
+  if (issues.length === 0 && sqi === 100) {
+    list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--acid); font-size:0.72rem;">✓ No vulnerabilities detected — code is clean.</div>';
+  } else if (issues.length > 0) {
+    list.innerHTML = issues.map(issue => `
+      <div class="issue-item ${issue.severity || 'medium'}">
+        <span class="issue-badge ${issue.severity || 'medium'}">${issue.severity || 'info'}</span>
+        <div class="issue-info">
+          <h4>${issue.name || issue.rule || issue.title || 'Issue'}</h4>
+          <p>${issue.description || issue.desc || issue.message || ''}</p>
+          ${issue.cwe ? `<div class="issue-cwe">${issue.cwe}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } else {
+    list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--dim); font-size:0.65rem;">Raw scan output shown below</div>';
+  }
+
+  // Show hardened code if available
+  if (hardenedCode) {
+    document.getElementById('hardenedSection').style.display = 'block';
+    document.getElementById('hardenedCode').textContent = hardenedCode;
+  }
+
+  // Show final verification if available
+  if (finalVerification) {
+    document.getElementById('verificationSection').style.display = 'block';
+    document.getElementById('verificationResult').textContent = finalVerification;
+  }
+
+  // Activity log
+  addActivity('◈', `Agent Scan Complete — SQI ${sqi}/100`, `${verdict} • ${issues.length} issue${issues.length !== 1 ? 's' : ''} found`);
+}
+
+// ── LOCAL SCAN (fallback) ──
+async function runLocalScan(code) {
+  const phases = ['Layer 1: AST Validator', 'Layer 2: ASC Engine', 'Layer 3: Zero-Guessing Gateway'];
+  let phaseIdx = 0;
+
+  const phaseInterval = setInterval(() => {
+    phaseIdx = (phaseIdx + 1) % phases.length;
+    document.getElementById('scanPhase').textContent = phases[phaseIdx];
+    document.getElementById('scanSub').textContent = 'Running client-side analysis...';
+  }, 700);
+
+  await new Promise(r => setTimeout(r, 2200));
+  clearInterval(phaseInterval);
+
+  const issues = [];
+  let securityIssues = 0, qualityIssues = 0;
+
+  if (document.getElementById('optSecurity').checked) {
+    SECURITY_RULES.forEach(rule => {
+      if (rule.pattern.test(code)) { issues.push({ ...rule, type: 'security' }); securityIssues++; }
+    });
+  }
+  if (document.getElementById('optQuality').checked) {
+    QUALITY_RULES.forEach(rule => {
+      if (rule.check(code)) { issues.push({ ...rule, type: 'quality', id: 'QA' }); qualityIssues++; }
+    });
+  }
+
+  const criticals = issues.filter(i => i.severity === 'critical').length;
+  const highs = issues.filter(i => i.severity === 'high').length;
+  const mediums = issues.filter(i => i.severity === 'medium').length;
+  const lows = issues.filter(i => i.severity === 'low').length;
+  const deduction = (criticals * 25) + (highs * 15) + (mediums * 8) + (lows * 3);
+  const sqi = Math.max(0, 100 - deduction);
+
+  const layer1Pass = criticals === 0;
+  const layer2Pass = highs === 0 && mediums === 0;
+  const layer3Pass = sqi === 100;
+
+  let verdict, verdictClass;
+  if (sqi === 100) { verdict = 'VERIFIED_10'; verdictClass = 'verified'; }
+  else if (sqi >= 60) { verdict = 'DIAGNOSTIC_MODE'; verdictClass = 'diagnostic'; }
+  else { verdict = 'CRITICAL_FAIL'; verdictClass = 'critical'; }
+
+  scanCount++; issuesTotal += issues.length;
+  localStorage.setItem('m10_scanCount', scanCount);
+  localStorage.setItem('m10_issuesTotal', issuesTotal);
+  document.getElementById('scan-count').textContent = scanCount;
+  document.getElementById('issues-count').textContent = issuesTotal;
+  document.getElementById('sqi-stat').textContent = sqi + '/100';
+  document.getElementById('sqi-stat').className = `stat-value ${sqi === 100 ? 'acid' : sqi >= 60 ? 'amber' : 'red'}`;
+
+  const passCount = [layer1Pass, layer2Pass, layer3Pass].filter(Boolean).length;
+  document.getElementById('layer-stat').textContent = `${passCount}/3 PASS`;
+  document.getElementById('layer-stat').className = `stat-value ${passCount === 3 ? 'acid' : passCount >= 2 ? 'amber' : 'red'}`;
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('sqiDisplay').style.display = 'block';
+
+  const ring = document.getElementById('sqiRing');
+  ring.style.setProperty('--sqi', sqi);
+  ring.className = `sqi-ring ${sqi === 100 ? 'verified-glow' : sqi >= 60 ? 'amber-ring' : 'red-ring'}`;
+  document.getElementById('sqiValue').textContent = sqi;
+  document.getElementById('sqiValue').style.color = sqi === 100 ? 'var(--acid)' : sqi >= 60 ? 'var(--amber)' : 'var(--red)';
+
+  const verdictEl = document.getElementById('sqiVerdict');
+  verdictEl.textContent = verdict;
+  verdictEl.className = `sqi-verdict ${verdictClass}`;
+
+  const badge = document.getElementById('verdictBadge');
+  badge.style.display = 'inline';
+  badge.textContent = verdict;
+  badge.className = `panel-badge ${sqi === 100 ? 'live' : 'beta'}`;
+
+  setLayerResult('layer1Result', layer1Pass);
+  setLayerResult('layer2Result', layer2Pass);
+  setLayerResult('layer3Result', layer3Pass);
+
+  const list = document.getElementById('issuesList');
+  if (issues.length === 0) {
+    list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--acid); font-size:0.72rem;">✓ No vulnerabilities detected — code is clean.</div>';
+  } else {
+    list.innerHTML = issues.map(issue => `
+      <div class="issue-item ${issue.severity}">
+        <span class="issue-badge ${issue.severity}">${issue.severity}</span>
+        <div class="issue-info">
+          <h4>${issue.name}</h4>
+          <p>${issue.desc}</p>
+          ${issue.id && issue.id !== 'QA' ? `<div class="issue-cwe">${issue.id} • ${issue.type}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  addActivity('◈', `Local Scan Complete — SQI ${sqi}/100`, `${verdict} • ${issues.length} issue${issues.length !== 1 ? 's' : ''} found`);
+}
+
+// ── HELPERS ──
+function setLayerResult(id, pass) {
+  const el = document.getElementById(id);
+  const status = pass ? 'pass' : 'fail';
+  el.className = `layer-result ${status}`;
+  el.innerHTML = `<span class="status-dot ${status}"></span>${pass ? 'PASS' : 'FAIL'}`;
+}
+
+function showError(title, detail) {
+  document.getElementById('loading').style.display = 'none';
+  const box = document.getElementById('errorBox');
+  document.getElementById('errorTitle').textContent = title;
+  document.getElementById('errorDetail').textContent = detail;
+  box.style.display = 'block';
+}
+
+function addActivity(icon, title, desc) {
+  const list = document.getElementById('activityList');
+  const item = document.createElement('div');
+  item.className = 'activity-item';
+  item.innerHTML = `
+    <div class="activity-icon">${icon}</div>
+    <div class="activity-content"><h4>${title}</h4><p>${desc}</p></div>
+    <span class="activity-time">Just now</span>
+  `;
+  list.insertBefore(item, list.firstChild);
+}
+
+function showHistory() {
+  alert('History: ' + scanCount + ' total scans performed. Full history coming in v2.');
+}
+
+function exportReport() {
+  const data = {
+    engine: 'Saikou Model10',
+    mode: scanMode,
+    sqi: document.getElementById('sqiValue')?.textContent || '—',
+    verdict: document.getElementById('sqiVerdict')?.textContent || '—',
+    totalScans: scanCount,
+    issuesTotal: issuesTotal,
+    agentId: AGENT_GRAPH_ID,
     exportDate: new Date().toISOString()
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
