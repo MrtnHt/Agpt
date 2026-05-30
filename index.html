@@ -1,15 +1,974 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=dashboard/saikou-model10-dashboard.html">
-    <title>Saikou Model10 — Code Intelligence</title>
-    <style>
-        body { background: #060608; color: #F0EEE8; font-family: 'IBM Plex Mono', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        a { color: #00FFD1; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoGPT — Autonomous AI Agent Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050507;
+    --surface: #0f0f13;
+    --primary: #bb86fc;
+    --secondary: #03dac6;
+    --accent: #f471b0;
+    --success: #00e676;
+    --warning: #ffab00;
+    --text: #e8e8f0;
+    --text2: #71717a;
+    --glass: rgba(15,15,19,0.7);
+    --border: rgba(255,255,255,0.08);
+    --card-bg: rgba(15,15,19,0.6);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  code, pre, .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Grid bg */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(187,134,252,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(187,134,252,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    animation: gridShift 20s linear infinite;
+  }
+  @keyframes gridShift { 0%{background-position:0 0} 100%{background-position:48px 48px} }
+
+  /* Glow orbs */
+  .glow-orb {
+    position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0;
+  }
+  .orb-1 { width:600px;height:600px;background:rgba(187,134,252,0.07);top:-200px;left:-200px; }
+  .orb-2 { width:500px;height:500px;background:rgba(3,218,198,0.05);bottom:-100px;right:-100px; }
+  .orb-3 { width:400px;height:400px;background:rgba(244,113,176,0.04);top:50%;left:50%;transform:translate(-50%,-50%); }
+
+  /* Nav */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(5,5,7,0.85);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1.2rem; font-weight: 800; color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+  }
+  .nav-links { display: flex; align-items: center; gap: 2rem; }
+  .nav-links a { color: var(--text2); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-actions { display: flex; align-items: center; gap: 1rem; }
+
+  /* Buttons */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), #9b59fa);
+    color: #fff; border: none; padding: 0.65rem 1.6rem;
+    border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.9rem;
+    cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(187,134,252,0.3); }
+  .btn-outline {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border); padding: 0.65rem 1.6rem;
+    border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.9rem;
+    cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; }
+
+  /* Badge */
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(187,134,252,0.12); border: 1px solid rgba(187,134,252,0.25);
+    color: var(--primary); padding: 0.35rem 1rem; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 600;
+  }
+  .badge-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+  /* Layout */
+  main { position: relative; z-index: 1; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+  section { padding: 5rem 0; }
+
+  /* Hero */
+  .hero { padding: 7rem 0 5rem; text-align: center; }
+  .hero h1 {
+    font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800;
+    line-height: 1.15; margin: 1.5rem 0 1.5rem;
+    background: linear-gradient(135deg, #fff 40%, var(--primary));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p { font-size: 1.15rem; color: var(--text2); max-width: 620px; margin: 0 auto 2.5rem; line-height: 1.7; }
+  .hero-actions { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+  /* Agent Live Panel */
+  .agent-panel {
+    margin: 4rem auto 0; max-width: 860px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    backdrop-filter: blur(20px);
+  }
+  .agent-panel-header {
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    padding: 0.85rem 1.25rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .dot-red { width:10px;height:10px;background:#ff5f57;border-radius:50%; }
+  .dot-yellow { width:10px;height:10px;background:#febc2e;border-radius:50%; }
+  .dot-green { width:10px;height:10px;background:#28c840;border-radius:50%; }
+  .panel-title { color: var(--text2); font-size: 0.8rem; margin-left: 0.5rem; }
+
+  .agent-grid { display: grid; grid-template-columns: 280px 1fr; min-height: 320px; }
+
+  .agent-list { border-right: 1px solid var(--border); padding: 1rem 0; }
+  .agent-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.8rem 1.25rem; cursor: pointer; transition: background 0.15s;
+    border-left: 3px solid transparent;
+  }
+  .agent-item.active { background: rgba(187,134,252,0.08); border-left-color: var(--primary); }
+  .agent-item:hover:not(.active) { background: rgba(255,255,255,0.03); }
+  .agent-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .agent-icon-purple { background: rgba(187,134,252,0.15); }
+  .agent-icon-teal { background: rgba(3,218,198,0.15); }
+  .agent-icon-orange { background: rgba(255,171,0,0.15); }
+  .agent-icon-pink { background: rgba(244,113,176,0.15); }
+  .agent-meta { flex: 1; min-width: 0; }
+  .agent-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .agent-status-row { display: flex; align-items: center; gap: 0.4rem; margin-top: 2px; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .status-running { background: var(--success); animation: pulse 2s infinite; }
+  .status-queued { background: var(--warning); }
+  .status-done { background: var(--primary); }
+  .status-text { font-size: 0.73rem; color: var(--text2); }
+
+  .agent-log { padding: 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; overflow-y: auto; max-height: 320px; }
+  .log-line { padding: 0.2rem 0; display: flex; gap: 0.75rem; }
+  .log-time { color: var(--text2); flex-shrink: 0; }
+  .log-agent { color: var(--primary); flex-shrink: 0; }
+  .log-msg { color: var(--text); }
+  .log-success { color: var(--success); }
+  .log-action { color: var(--secondary); }
+  .log-data { color: var(--accent); }
+
+  /* Stats */
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem; margin: 0 0;
+  }
+  .stat-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.75rem;
+    backdrop-filter: blur(10px); text-align: center;
+  }
+  .stat-number { font-size: 2rem; font-weight: 800; color: var(--text); }
+  .stat-label { color: var(--text2); font-size: 0.85rem; margin-top: 0.25rem; }
+  .stat-trend { color: var(--success); font-size: 0.78rem; margin-top: 0.5rem; }
+
+  /* Features */
+  .section-label { color: var(--primary); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+  .section-title { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; line-height: 1.2; margin-bottom: 1rem; }
+  .section-sub { color: var(--text2); font-size: 1rem; line-height: 1.7; max-width: 560px; }
+  .text-center { text-align: center; }
+  .text-center .section-sub { margin: 0 auto; }
+
+  .feature-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .feature-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem;
+    backdrop-filter: blur(10px); transition: all 0.3s;
+  }
+  .feature-card:hover { border-color: rgba(187,134,252,0.3); transform: translateY(-3px); }
+  .feat-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 1.25rem;
+  }
+  .feat-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.65rem; }
+  .feat-desc { color: var(--text2); font-size: 0.88rem; line-height: 1.65; }
+
+  /* Agent Types Showcase */
+  .agent-types { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .agent-type-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.75rem;
+    backdrop-filter: blur(10px);
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .agent-type-card:hover { border-color: rgba(187,134,252,0.25); }
+  .agent-type-icon { font-size: 2rem; flex-shrink: 0; margin-top: 2px; }
+  .agent-type-body {}
+  .agent-type-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .agent-type-desc { color: var(--text2); font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.75rem; }
+  .agent-type-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tag {
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    color: var(--text2); font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Pipeline */
+  .pipeline { margin-top: 3rem; }
+  .pipeline-steps { display: flex; gap: 0; }
+  .pipeline-step {
+    flex: 1; position: relative; padding: 2rem 1.5rem 2rem;
+    background: var(--card-bg); border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+  }
+  .pipeline-step:first-child { border-radius: 16px 0 0 16px; }
+  .pipeline-step:last-child { border-radius: 0 16px 16px 0; }
+  .pipeline-step:not(:first-child) { border-left: none; }
+  .step-num {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 800; margin-bottom: 1rem;
+  }
+  .step-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .step-desc { color: var(--text2); font-size: 0.82rem; line-height: 1.6; }
+  .step-arrow {
+    position: absolute; right: -16px; top: 50%;
+    transform: translateY(-50%); z-index: 2;
+    width: 30px; height: 30px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; color: var(--primary);
+  }
+
+  /* Memory & Tools */
+  .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .memory-viz {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; backdrop-filter: blur(10px);
+  }
+  .memory-header {
+    background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border);
+    padding: 1rem 1.25rem; font-size: 0.8rem; color: var(--text2);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .memory-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .memory-entry {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.85rem 1rem;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .mem-type {
+    font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; margin-top: 1px;
+  }
+  .mem-short { background: rgba(187,134,252,0.2); color: var(--primary); }
+  .mem-long { background: rgba(3,218,198,0.2); color: var(--secondary); }
+  .mem-vector { background: rgba(244,113,176,0.2); color: var(--accent); }
+  .mem-content { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+  .mem-meta { font-size: 0.72rem; color: var(--text2); margin-top: 3px; }
+
+  /* Tools Grid */
+  .tools-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 2.5rem;
+  }
+  .tool-chip {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.85rem;
+    display: flex; align-items: center; gap: 0.6rem;
+    font-size: 0.82rem; font-weight: 600;
+    transition: all 0.2s;
+  }
+  .tool-chip:hover { border-color: rgba(187,134,252,0.3); color: var(--primary); }
+  .tool-em { font-size: 1.1rem; }
+
+  /* Integrations */
+  .integrations-grid {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; margin-top: 2.5rem;
+  }
+  .integration-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem 0.75rem;
+    text-align: center; font-size: 0.78rem; color: var(--text2);
+    transition: all 0.2s; backdrop-filter: blur(10px);
+  }
+  .integration-card:hover { border-color: rgba(187,134,252,0.3); color: var(--text); }
+  .integration-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+
+  /* Pricing */
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .price-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 20px; padding: 2.25rem;
+    backdrop-filter: blur(10px); position: relative;
+    transition: transform 0.2s;
+  }
+  .price-card:hover { transform: translateY(-4px); }
+  .price-card.featured {
+    border-color: var(--primary);
+    background: rgba(187,134,252,0.07);
+  }
+  .price-featured-badge {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--primary), #9b59fa);
+    color: #fff; font-size: 0.75rem; font-weight: 700;
+    padding: 0.3rem 1.25rem; border-radius: 100px;
+  }
+  .price-tier { font-size: 0.8rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; }
+  .price-amount { display: flex; align-items: baseline; gap: 0.25rem; margin: 1rem 0 0.25rem; }
+  .price-dollar { font-size: 1.5rem; font-weight: 700; color: var(--text2); }
+  .price-num { font-size: 3rem; font-weight: 800; }
+  .price-period { color: var(--text2); font-size: 0.85rem; }
+  .price-desc { color: var(--text2); font-size: 0.88rem; margin-bottom: 1.75rem; line-height: 1.5; }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+  .price-features li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.88rem; color: var(--text2); }
+  .price-features li::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .price-features li.x::before { content: '✕'; color: var(--text2); }
+  .price-cta { width: 100%; }
+
+  /* Footer */
+  footer {
+    background: rgba(5,5,7,0.95); border-top: 1px solid var(--border);
+    padding: 4rem 0 2rem;
+  }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand p { color: var(--text2); font-size: 0.88rem; line-height: 1.7; margin: 1rem 0 1.5rem; max-width: 280px; }
+  .footer-links h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--text); }
+  .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; }
+  .footer-links a { color: var(--text2); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--primary); }
+  .footer-bottom { border-top: 1px solid var(--border); padding-top: 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .footer-bottom p { color: var(--text2); font-size: 0.8rem; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(187,134,252,0.3); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
+    .feature-grid { grid-template-columns: 1fr; }
+    .agent-grid { grid-template-columns: 1fr; }
+    .agent-list { border-right: none; border-bottom: 1px solid var(--border); }
+    .agent-types { grid-template-columns: 1fr; }
+    .pipeline-steps { flex-direction: column; }
+    .pipeline-step { border-radius: 12px !important; border: 1px solid var(--border) !important; }
+    .split-section { grid-template-columns: 1fr; }
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    .integrations-grid { grid-template-columns: repeat(3, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  }
+</style>
 </head>
 <body>
-    <p>Redirecting to <a href="dashboard/saikou-model10-dashboard.html">Saikou Model10 Dashboard</a>...</p>
+
+<div class="bg-grid"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+<div class="glow-orb orb-3"></div>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🤖</div>
+    AutoGPT
+  </a>
+  <div class="nav-links">
+    <a href="#agents">Agents</a>
+    <a href="#features">Features</a>
+    <a href="#memory">Memory</a>
+    <a href="#integrations">Integrations</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <div class="nav-actions">
+    <a href="https://saikou.tech" class="btn-outline btn-sm" target="_blank">Saikou.tech</a>
+    <a href="#pricing" class="btn-primary btn-sm">Get Started →</a>
+  </div>
+</nav>
+
+<main>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <span class="badge"><span class="badge-dot"></span>12,400+ agents running now</span>
+      <h1>Deploy Autonomous AI Agents<br>That Actually Get Work Done</h1>
+      <p>AutoGPT spins up intelligent agents that plan, recall, use tools, and complete complex multi-step tasks — all without hand-holding.</p>
+      <div class="hero-actions">
+        <a href="#pricing" class="btn-primary">Deploy Your First Agent →</a>
+        <a href="#agents" class="btn-outline">Watch Live Demo</a>
+      </div>
+
+      <!-- Live Agent Panel -->
+      <div class="agent-panel" id="agents">
+        <div class="agent-panel-header">
+          <div class="dot-red"></div>
+          <div class="dot-yellow"></div>
+          <div class="dot-green"></div>
+          <span class="panel-title">AutoGPT Agent Console — Live</span>
+        </div>
+        <div class="agent-grid">
+          <div class="agent-list">
+            <div class="agent-item active">
+              <div class="agent-icon agent-icon-purple">🔬</div>
+              <div class="agent-meta">
+                <div class="agent-name">ResearchBot-7</div>
+                <div class="agent-status-row">
+                  <div class="status-dot status-running"></div>
+                  <span class="status-text">Running · 4m 22s</span>
+                </div>
+              </div>
+            </div>
+            <div class="agent-item">
+              <div class="agent-icon agent-icon-teal">✍️</div>
+              <div class="agent-meta">
+                <div class="agent-name">ContentWriter-3</div>
+                <div class="agent-status-row">
+                  <div class="status-dot status-running"></div>
+                  <span class="status-text">Running · 12m 8s</span>
+                </div>
+              </div>
+            </div>
+            <div class="agent-item">
+              <div class="agent-icon agent-icon-orange">📊</div>
+              <div class="agent-meta">
+                <div class="agent-name">DataAnalyst-1</div>
+                <div class="agent-status-row">
+                  <div class="status-dot status-queued"></div>
+                  <span class="status-text">Queued · 2 tasks</span>
+                </div>
+              </div>
+            </div>
+            <div class="agent-item">
+              <div class="agent-icon agent-icon-pink">🛒</div>
+              <div class="agent-meta">
+                <div class="agent-name">ShopAgent-11</div>
+                <div class="agent-status-row">
+                  <div class="status-dot status-done"></div>
+                  <span class="status-text">Done · 8 tasks</span>
+                </div>
+              </div>
+            </div>
+            <div class="agent-item">
+              <div class="agent-icon agent-icon-purple">📧</div>
+              <div class="agent-meta">
+                <div class="agent-name">OutreachAgent-5</div>
+                <div class="agent-status-row">
+                  <div class="status-dot status-running"></div>
+                  <span class="status-text">Running · 1m 45s</span>
+                </div>
+              </div>
+            </div>
+            <div class="agent-item">
+              <div class="agent-icon agent-icon-teal">💻</div>
+              <div class="agent-meta">
+                <div class="agent-name">CodeReviewer-2</div>
+                <div class="agent-status-row">
+                  <div class="status-dot status-done"></div>
+                  <span class="status-text">Done · 24 files</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="agent-log" id="agentLog">
+            <div class="log-line"><span class="log-time">14:32:01</span><span class="log-agent">[ResearchBot-7]</span><span class="log-msg">Initializing research task: "Q3 SaaS market trends 2026"</span></div>
+            <div class="log-line"><span class="log-time">14:32:03</span><span class="log-agent">[ResearchBot-7]</span><span class="log-action">→ Tool: web_search("SaaS market analysis 2026 Q3")</span></div>
+            <div class="log-line"><span class="log-time">14:32:05</span><span class="log-agent">[ResearchBot-7]</span><span class="log-success">✓ Retrieved 14 sources, scoring relevance...</span></div>
+            <div class="log-line"><span class="log-time">14:32:08</span><span class="log-agent">[ResearchBot-7]</span><span class="log-action">→ Tool: read_url("techcrunch.com/2026/saas-trends")</span></div>
+            <div class="log-line"><span class="log-time">14:32:11</span><span class="log-agent">[ResearchBot-7]</span><span class="log-msg">Extracting key insights from 3,240 words...</span></div>
+            <div class="log-line"><span class="log-time">14:32:14</span><span class="log-agent">[ResearchBot-7]</span><span class="log-data">→ Memory: storing 8 facts to long-term</span></div>
+            <div class="log-line"><span class="log-time">14:32:18</span><span class="log-agent">[ResearchBot-7]</span><span class="log-action">→ Tool: web_search("AI agent adoption enterprise 2026")</span></div>
+            <div class="log-line"><span class="log-time">14:32:21</span><span class="log-agent">[ResearchBot-7]</span><span class="log-success">✓ Cross-referencing 6 additional sources</span></div>
+            <div class="log-line"><span class="log-time">14:32:25</span><span class="log-agent">[ResearchBot-7]</span><span class="log-msg">Planning sub-task: competitor analysis (3 agents)</span></div>
+            <div class="log-line"><span class="log-time">14:32:27</span><span class="log-agent">[ResearchBot-7]</span><span class="log-action">→ Spawning sub-agent: CompAnalyst-A, -B, -C</span></div>
+            <div class="log-line"><span class="log-time">14:32:30</span><span class="log-agent">[ContentWriter-3]</span><span class="log-success">✓ Draft 1 complete (1,847 words), running quality check</span></div>
+            <div class="log-line"><span class="log-time">14:32:33</span><span class="log-agent">[OutreachAgent-5]</span><span class="log-action">→ Tool: send_email(to="leads@list.csv", template="follow_up_v2")</span></div>
+            <div class="log-line"><span class="log-time">14:32:36</span><span class="log-agent">[OutreachAgent-5]</span><span class="log-success">✓ 47 emails sent, tracking opens...</span></div>
+            <div class="log-line"><span class="log-time">14:32:39</span><span class="log-agent">[ResearchBot-7]</span><span class="log-data">→ Synthesizing findings: 6 trend categories identified</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section style="padding: 2rem 0 4rem;">
+    <div class="container">
+      <div class="stats-strip">
+        <div class="stat-card">
+          <div class="stat-number">12.4K+</div>
+          <div class="stat-label">Active Agents</div>
+          <div class="stat-trend">↑ 34% this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">8.7M</div>
+          <div class="stat-label">Tasks Completed</div>
+          <div class="stat-trend">↑ 2.1M this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">98.4%</div>
+          <div class="stat-label">Task Success Rate</div>
+          <div class="stat-trend">Best in class</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">340+</div>
+          <div class="stat-label">Built-in Tools</div>
+          <div class="stat-trend">New tools weekly</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features">
+    <div class="container">
+      <div class="text-center">
+        <div class="section-label">🧠 Capabilities</div>
+        <div class="section-title">Everything an autonomous agent needs</div>
+        <p class="section-sub">AutoGPT agents don't just respond — they plan, remember, act, and iterate until the job is done.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feat-icon" style="background:rgba(187,134,252,0.15);">🧠</div>
+          <div class="feat-title">Autonomous Planning</div>
+          <p class="feat-desc">Agents break complex goals into subtasks, sequencing and re-planning dynamically based on results. No step-by-step instructions required.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon" style="background:rgba(3,218,198,0.15);">💾</div>
+          <div class="feat-title">Persistent Memory</div>
+          <p class="feat-desc">Three-tier memory: short-term context window, long-term file storage, and vector semantic retrieval — agents remember what matters.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon" style="background:rgba(244,113,176,0.15);">🛠️</div>
+          <div class="feat-title">340+ Tools</div>
+          <p class="feat-desc">Web search, code execution, email, file I/O, APIs, databases, browser control — agents pick the right tool automatically.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon" style="background:rgba(255,171,0,0.15);">🔁</div>
+          <div class="feat-title">Multi-Agent Orchestration</div>
+          <p class="feat-desc">Spawn parallel sub-agents for massive tasks. Orchestrator agents delegate, collect results, and synthesize outputs automatically.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon" style="background:rgba(0,230,118,0.15);">🔒</div>
+          <div class="feat-title">Human-in-the-Loop</div>
+          <p class="feat-desc">Set approval gates for critical actions. Review agent plans before execution, or run fully autonomous with confidence thresholds.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon" style="background:rgba(187,134,252,0.15);">⚡</div>
+          <div class="feat-title">Real-Time Monitoring</div>
+          <p class="feat-desc">Watch every thought, tool call, and decision in real time. Full audit logs, cost tracking, and performance analytics included.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agent Types -->
+  <section style="background: rgba(15,15,19,0.4); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="text-center">
+        <div class="section-label">🤖 Agent Templates</div>
+        <div class="section-title">Pre-built agents for every workflow</div>
+        <p class="section-sub">Start with a template, customise the goal, deploy in minutes.</p>
+      </div>
+      <div class="agent-types">
+        <div class="agent-type-card">
+          <div class="agent-type-icon">🔬</div>
+          <div class="agent-type-body">
+            <div class="agent-type-name">Research Agent</div>
+            <p class="agent-type-desc">Scours the web, reads papers, cross-references sources, and delivers structured research reports with citations.</p>
+            <div class="agent-type-tags">
+              <span class="tag">web_search</span>
+              <span class="tag">read_url</span>
+              <span class="tag">generate_report</span>
+              <span class="tag">memory</span>
+            </div>
+          </div>
+        </div>
+        <div class="agent-type-card">
+          <div class="agent-type-icon">✍️</div>
+          <div class="agent-type-body">
+            <div class="agent-type-name">Content Creator</div>
+            <p class="agent-type-desc">Researches topics, drafts long-form content, optimises for SEO, formats, and publishes to your CMS or blog.</p>
+            <div class="agent-type-tags">
+              <span class="tag">write_content</span>
+              <span class="tag">seo_check</span>
+              <span class="tag">publish_cms</span>
+              <span class="tag">image_gen</span>
+            </div>
+          </div>
+        </div>
+        <div class="agent-type-card">
+          <div class="agent-type-icon">💻</div>
+          <div class="agent-type-body">
+            <div class="agent-type-name">Code Agent</div>
+            <p class="agent-type-desc">Reads your codebase, implements features, writes tests, runs them, and submits pull requests — fully autonomously.</p>
+            <div class="agent-type-tags">
+              <span class="tag">read_file</span>
+              <span class="tag">write_code</span>
+              <span class="tag">run_tests</span>
+              <span class="tag">git_commit</span>
+            </div>
+          </div>
+        </div>
+        <div class="agent-type-card">
+          <div class="agent-type-icon">📧</div>
+          <div class="agent-type-body">
+            <div class="agent-type-name">Sales Outreach Agent</div>
+            <p class="agent-type-desc">Researches prospects, personalises emails, manages follow-up sequences, tracks replies, and books meetings automatically.</p>
+            <div class="agent-type-tags">
+              <span class="tag">enrich_lead</span>
+              <span class="tag">send_email</span>
+              <span class="tag">track_open</span>
+              <span class="tag">calendar</span>
+            </div>
+          </div>
+        </div>
+        <div class="agent-type-card">
+          <div class="agent-type-icon">📊</div>
+          <div class="agent-type-body">
+            <div class="agent-type-name">Data Analyst</div>
+            <p class="agent-type-desc">Queries databases, runs Python analysis, generates charts, and writes narrative summaries of business metrics.</p>
+            <div class="agent-type-tags">
+              <span class="tag">sql_query</span>
+              <span class="tag">python_exec</span>
+              <span class="tag">chart_gen</span>
+              <span class="tag">slack_post</span>
+            </div>
+          </div>
+        </div>
+        <div class="agent-type-card">
+          <div class="agent-type-icon">🛒</div>
+          <div class="agent-type-body">
+            <div class="agent-type-name">E-commerce Agent</div>
+            <p class="agent-type-desc">Monitors inventory, adjusts pricing, responds to reviews, syncs listings across platforms, and reports performance daily.</p>
+            <div class="agent-type-tags">
+              <span class="tag">shopify_api</span>
+              <span class="tag">price_monitor</span>
+              <span class="tag">review_reply</span>
+              <span class="tag">sync_listing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Memory Section -->
+  <section id="memory">
+    <div class="container">
+      <div class="split-section">
+        <div>
+          <div class="section-label">💾 Memory System</div>
+          <div class="section-title">Agents that remember everything</div>
+          <p class="section-sub" style="margin-bottom: 2rem;">AutoGPT's three-tier memory ensures agents retain context across sessions, recall past decisions, and retrieve relevant facts instantly using vector similarity search.</p>
+          <div class="tools-grid">
+            <div class="tool-chip"><span class="tool-em">🌐</span> Web Search</div>
+            <div class="tool-chip"><span class="tool-em">🐍</span> Python Exec</div>
+            <div class="tool-chip"><span class="tool-em">💻</span> Terminal</div>
+            <div class="tool-chip"><span class="tool-em">📧</span> Email Send</div>
+            <div class="tool-chip"><span class="tool-em">🗄️</span> SQL Query</div>
+            <div class="tool-chip"><span class="tool-em">📁</span> File R/W</div>
+            <div class="tool-chip"><span class="tool-em">🔗</span> HTTP API</div>
+            <div class="tool-chip"><span class="tool-em">🌐</span> Browser</div>
+            <div class="tool-chip"><span class="tool-em">🔔</span> Slack/Teams</div>
+          </div>
+        </div>
+        <div class="memory-viz">
+          <div class="memory-header">
+            <span>Agent Memory — ResearchBot-7</span>
+            <span style="color:var(--secondary);">24 entries</span>
+          </div>
+          <div class="memory-body">
+            <div class="memory-entry">
+              <span class="mem-type mem-short">SHORT</span>
+              <div>
+                <div class="mem-content">Current task: Q3 SaaS market analysis targeting enterprise buyers</div>
+                <div class="mem-meta">Context window · Updated 12s ago</div>
+              </div>
+            </div>
+            <div class="memory-entry">
+              <span class="mem-type mem-long">LONG</span>
+              <div>
+                <div class="mem-content">User prefers executive summary format, max 800 words, bullet points for key findings</div>
+                <div class="mem-meta">Long-term storage · Stored 3 sessions ago</div>
+              </div>
+            </div>
+            <div class="memory-entry">
+              <span class="mem-type mem-vector">VECTOR</span>
+              <div>
+                <div class="mem-content">SaaS growth rate Q2 2026: 18.4% YoY; AI-native SaaS: 47% growth. Source: Gartner</div>
+                <div class="mem-meta">Vector store · Similarity: 0.94 · Retrieved 34s ago</div>
+              </div>
+            </div>
+            <div class="memory-entry">
+              <span class="mem-type mem-vector">VECTOR</span>
+              <div>
+                <div class="mem-content">Top 3 enterprise pain points: data security, integration complexity, vendor lock-in</div>
+                <div class="mem-meta">Vector store · Similarity: 0.91 · Retrieved 1m ago</div>
+              </div>
+            </div>
+            <div class="memory-entry">
+              <span class="mem-type mem-short">SHORT</span>
+              <div>
+                <div class="mem-content">Sub-agents (CompAnalyst A/B/C) dispatched — awaiting results from 3 parallel tasks</div>
+                <div class="mem-meta">Context window · Updated 8s ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pipeline -->
+  <section style="background: rgba(15,15,19,0.4); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="text-center">
+        <div class="section-label">⚡ How It Works</div>
+        <div class="section-title">From goal to result, autonomously</div>
+        <p class="section-sub">Give AutoGPT a goal in plain English. The rest is automatic.</p>
+      </div>
+      <div class="pipeline">
+        <div class="pipeline-steps">
+          <div class="pipeline-step">
+            <div class="step-num">1</div>
+            <div class="step-title">Define Goal</div>
+            <p class="step-desc">Write your objective in plain English. No code, no configuration — just what you want achieved.</p>
+            <div class="step-arrow">→</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-num">2</div>
+            <div class="step-title">Agent Plans</div>
+            <p class="step-desc">AutoGPT generates a step-by-step plan, selects tools, and identifies what information it needs.</p>
+            <div class="step-arrow">→</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-num">3</div>
+            <div class="step-title">Execute & Iterate</div>
+            <p class="step-desc">Agent executes each step, checks results, adapts the plan if needed, and spawns sub-agents for parallel work.</p>
+            <div class="step-arrow">→</div>
+          </div>
+          <div class="pipeline-step">
+            <div class="step-num">4</div>
+            <div class="step-title">Deliver Results</div>
+            <p class="step-desc">Completed work lands in your chosen output: Slack, email, Google Docs, database, or saved as a file.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integrations -->
+  <section id="integrations">
+    <div class="container">
+      <div class="text-center">
+        <div class="section-label">🔗 Integrations</div>
+        <div class="section-title">Connects to everything you use</div>
+        <p class="section-sub">340+ tools built in. Or build custom tools with our Python SDK.</p>
+      </div>
+      <div class="integrations-grid">
+        <div class="integration-card"><div class="integration-icon">🔍</div>Google Search</div>
+        <div class="integration-card"><div class="integration-icon">📁</div>Google Drive</div>
+        <div class="integration-card"><div class="integration-icon">📧</div>Gmail</div>
+        <div class="integration-card"><div class="integration-icon">💬</div>Slack</div>
+        <div class="integration-card"><div class="integration-icon">🐙</div>GitHub</div>
+        <div class="integration-card"><div class="integration-icon">🗄️</div>PostgreSQL</div>
+        <div class="integration-card"><div class="integration-icon">📊</div>Notion</div>
+        <div class="integration-card"><div class="integration-icon">🛒</div>Shopify</div>
+        <div class="integration-card"><div class="integration-icon">💼</div>HubSpot</div>
+        <div class="integration-card"><div class="integration-icon">📋</div>Airtable</div>
+        <div class="integration-card"><div class="integration-icon">🎵</div>Twitter/X</div>
+        <div class="integration-card"><div class="integration-icon">🤝</div>Zapier</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" style="background: rgba(15,15,19,0.4); border-top: 1px solid var(--border);">
+    <div class="container">
+      <div class="text-center">
+        <div class="section-label">💰 Pricing</div>
+        <div class="section-title">Start free, scale as you grow</div>
+        <p class="section-sub">No credit card needed to start. Upgrade when your agents need more power.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">Free</div>
+          <div class="price-amount">
+            <span class="price-dollar">$</span>
+            <span class="price-num">0</span>
+            <span class="price-period">/month</span>
+          </div>
+          <p class="price-desc">Explore AutoGPT with a single agent and limited tool calls.</p>
+          <ul class="price-features">
+            <li>1 agent at a time</li>
+            <li>50 tool calls/day</li>
+            <li>Short-term memory only</li>
+            <li>10 built-in tools</li>
+            <li>Community support</li>
+            <li class="x">Multi-agent orchestration</li>
+            <li class="x">Long-term memory</li>
+            <li class="x">Custom tools</li>
+          </ul>
+          <a href="#" class="btn-outline price-cta">Start Free</a>
+        </div>
+        <div class="price-card featured">
+          <div class="price-featured-badge">Most Popular</div>
+          <div class="price-tier">Pro</div>
+          <div class="price-amount">
+            <span class="price-dollar">$</span>
+            <span class="price-num" style="background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">49</span>
+            <span class="price-period">/month</span>
+          </div>
+          <p class="price-desc">For power users running multiple agents across real workflows.</p>
+          <ul class="price-features">
+            <li>10 concurrent agents</li>
+            <li>5,000 tool calls/day</li>
+            <li>Full memory system (all tiers)</li>
+            <li>All 340+ built-in tools</li>
+            <li>Multi-agent orchestration</li>
+            <li>Human-in-the-loop gates</li>
+            <li>Priority support</li>
+            <li class="x">Custom tool SDK</li>
+          </ul>
+          <a href="#" class="btn-primary price-cta">Start Pro Trial →</a>
+        </div>
+        <div class="price-card">
+          <div class="price-tier">Enterprise</div>
+          <div class="price-amount">
+            <span class="price-num" style="font-size:2rem;">Custom</span>
+          </div>
+          <p class="price-desc">Unlimited agents, dedicated infrastructure, and white-glove onboarding.</p>
+          <ul class="price-features">
+            <li>Unlimited agents</li>
+            <li>Unlimited tool calls</li>
+            <li>Dedicated cloud deployment</li>
+            <li>Custom tool SDK access</li>
+            <li>SSO + RBAC</li>
+            <li>Audit logs & compliance</li>
+            <li>SLA guarantee</li>
+            <li>Dedicated success manager</li>
+          </ul>
+          <a href="#" class="btn-outline price-cta">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="nav-logo" style="text-decoration:none;">
+          <div class="nav-logo-icon">🤖</div>
+          AutoGPT
+        </a>
+        <p>The most trusted autonomous AI agent platform. Build agents that work while you sleep.</p>
+        <div style="display:flex;gap:0.75rem;">
+          <a href="https://saikou.tech" class="btn-outline btn-sm" target="_blank">Saikou.tech</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#agents">Live Demo</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#memory">Memory</a></li>
+          <li><a href="#integrations">Integrations</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Developers</h4>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Python SDK</a></li>
+          <li><a href="#">Custom Tools</a></li>
+          <li><a href="#">API Reference</a></li>
+          <li><a href="#">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 AutoGPT. Built on the <a href="https://saikou.tech" style="color:var(--primary);text-decoration:none;">Saikou</a> platform.</p>
+      <p>Part of the <a href="https://saikou.tech" style="color:var(--primary);text-decoration:none;">Saikou ecosystem</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Auto-scroll the agent log
+  const log = document.getElementById('agentLog');
+  if (log) {
+    log.scrollTop = log.scrollHeight;
+
+    // Simulate live log updates
+    const logMessages = [
+      { agent: 'ResearchBot-7', cls: 'log-success', msg: '✓ CompAnalyst-A returned: 12 competitor data points' },
+      { agent: 'ResearchBot-7', cls: 'log-data', msg: '→ Memory: updating competitor landscape with 12 entries' },
+      { agent: 'ContentWriter-3', cls: 'log-action', msg: '→ Tool: seo_check(draft_1.md)' },
+      { agent: 'ContentWriter-3', cls: 'log-success', msg: '✓ SEO score: 87/100, 3 optimisation suggestions' },
+      { agent: 'OutreachAgent-5', cls: 'log-msg', msg: 'Reply received from prospect@techcorp.com — scheduling follow-up' },
+      { agent: 'ResearchBot-7', cls: 'log-msg', msg: 'Generating executive summary (target: 600 words)...' },
+      { agent: 'DataAnalyst-1', cls: 'log-action', msg: '→ Task started: weekly revenue metrics pull' },
+      { agent: 'ResearchBot-7', cls: 'log-success', msg: '✓ Report complete: Q3 SaaS Market Analysis (847 words, 6 sections)' },
+    ];
+    let i = 0;
+    function addLog() {
+      if (i >= logMessages.length) { i = 0; }
+      const item = logMessages[i++];
+      const now = new Date();
+      const time = now.toTimeString().slice(0,8);
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.innerHTML = `<span class="log-time">${time}</span><span class="log-agent">[${item.agent}]</span><span class="${item.cls}">${item.msg}</span>`;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+      // Trim old lines
+      while (log.children.length > 25) log.removeChild(log.firstChild);
+    }
+    setInterval(addLog, 2800);
+  }
+
+  // Agent list click interaction
+  document.querySelectorAll('.agent-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.agent-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+</script>
+
 </body>
 </html>
